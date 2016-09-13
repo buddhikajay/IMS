@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Followup list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Timestamp</th>
+                <th>Action</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for followup in followups %}
+            <tr>
+                <td><a href="{{ path('followup_show', { 'id': followup.id }) }}">{{ followup.id }}</a></td>
+                <td>{% if followup.timestamp %}{{ followup.timestamp|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ followup.action }}</td>
+                <td>{{ followup.description }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('followup_show', { 'id': followup.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('followup_edit', { 'id': followup.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('followup_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>BulkFile creation</h1>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <input id="preview" type="button" value="Preview" onclick="previewFunction();" />
+        <input id="mapping" type="button" value="Map" onclick="mappingFunction();" />
+        <input type="submit" value="Create" />
+    {{ form_end(form) }}
+
+    <div id="dvCSV"></div>
+
+    <ul>
+        <li>
+            <a href="{{ path('bulkfile_index') }}">Back to the list</a>
+        </li>
+    </ul>
+
+
+    <script>
+        var table;
+
+        function previewFunction() {
+            var file = document.getElementById("bulk_file_filePath");
+            var reader = new FileReader();
+            var f = file.files[0];
+            reader.onload = function (e) {
+                table = document.createElement("TABLE");
+                table.id = "myTable";
+                table.style.width = '100%';
+                table.setAttribute('border', '1');
+                var tbdy = document.createElement('tbody');
+
+                var rows = e.target.result.split("\n");
+
+                var dropdowns = document.createElement('tr');
+                var rowFirst = document.createElement('tr');
+                var cell1s = rows[0].split(",");
+                for (var j = 0; j < cell1s.length; j++) {
+                    var cell1 = document.createElement('td');
+                    cell1.appendChild(document.createTextNode(cell1s[j]));
+
+                    var cell2 = document.createElement('td');
+                    cell2.appendChild(createDropdown());
+
+                    rowFirst.appendChild(cell1);
+                    dropdowns.appendChild(cell2);
+                }
+
+                if(document.getElementById("bulk_file_headers").checked){
+                    rowFirst.style.fontWeight = 'bold';
+                }
+
+                dropdowns.id = "dropdownrow";
+                tbdy.appendChild(dropdowns);
+                rowFirst.id = "rowFirst";
+                tbdy.appendChild(rowFirst);
+
+                for (var i = 1; i < 5; i++) {
+                    var row = document.createElement('tr');
+                    var cells = rows[i].split(",");
+                    for (var j = 0; j < cells.length; j++) {
+                        var cell = document.createElement('td');
+                        cell.appendChild(document.createTextNode(cells[j]));
+                        row.appendChild(cell);
+                    }
+                    tbdy.appendChild(row);
+                }
+
+                table.appendChild(tbdy);
+                $("#dvCSV").html('');
+                $("#dvCSV").append(table);
+            };
+            reader.readAsText(f);
+        }
+
+        function createDropdown(){
+            var select = document.createElement("select");
+
+            select.options.add( new Option("---","0", true, true) );
+            select.options.add( new Option("NIC","nic") );
+            select.options.add( new Option("Name","name") );
+            select.options.add( new Option("Telephone","telephone") );
+            select.options.add( new Option("Email","email") );
+            select.options.add( new Option("School","school") );
+            select.options.add( new Option("District","district") );
+            // select.options.add( new Option("DoB","dob") );
+            select.options.add( new Option("O/L English","olEnglish") );
+            select.options.add( new Option("O/L Math", "olMath") );
+            select.options.add( new Option("Language", "lang") );
+            select.options.add( new Option("Work Experience", "work") );
+            select.options.add( new Option("Education", "education") );
+            select.options.add( new Option("Course Code", "courseCode") );
+            select.options.add( new Option("Course Name", "courseName") );
+            return select;
+        }
+
+        document.getElementById("bulk_file_headers").onclick = function () {
+            //alert("Here");
+            if(document.getElementById("rowFirst")) {
+                //alert("here");
+                if ($(this).is(':checked')) {
+                    //alert("checked");
+                    document.getElementById("rowFirst").style.fontWeight = 'bold';
+                } else {
+                    //alert("not");
+                    document.getElementById("rowFirst").style.fontWeight = 'normal';
+                }
+            }
+        };
+
+        function mappingFunction() {
+            var jsonData = {};
+            var row = $("#dropdownrow");
+
+            var c = 1;
+            row.find('td').each(function () {
+                var val = $(this).find('select :selected').val();
+                if (val != 0) {
+                    jsonData[val] = c;
+                }
+                c++;
+            });
+
+            document.getElementById("bulk_file_columnMapping").value = JSON.stringify(jsonData);
+            alert(jsonData);
+        }
+    </script>
+
+{% endblock %}

@@ -1,0 +1,30 @@
+AppBundle\Entity\Followup:
+    type: entity
+    table: null
+    repositoryClass: AppBundle\Repository\FollowupRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        timestamp:
+            type: datetime
+        action:
+            type: string
+            length: '10'
+        description:
+            type: text
+    manyToOne:
+        inquiry:
+            targetEntity: Inquiry
+            joinColumn:
+                name: inquiry
+                referencedColumnName: id
+        concellor:
+            targetEntity: User
+            joinColumn:
+                name: councellor
+                referencedColumnName: id
+    lifecycleCallbacks: {  }

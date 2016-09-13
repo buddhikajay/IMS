@@ -1,0 +1,29 @@
+AppBundle\Entity\Broadcast:
+    type: entity
+    table: null
+    repositoryClass: AppBundle\Repository\BroadcastRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        action:
+            type: string
+            length: '10'
+        description:
+            type: text
+        name:
+            type: text
+        criteria:
+            type: text
+        timestamp:
+            type: datetime
+        sentCount:
+            type: integer
+            nullable: true
+        deliveredCount:
+            type: integer
+            nullable: true
+    lifecycleCallbacks: {  }

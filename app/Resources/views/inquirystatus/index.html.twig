@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>InquiryStatus list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Complete</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for inquiryStatus in inquiryStatuses %}
+            <tr>
+                <td><a href="{{ path('inquirystatus_show', { 'id': inquiryStatus.id }) }}">{{ inquiryStatus.id }}</a></td>
+                <td>{{ inquiryStatus.code }}</td>
+                <td>{{ inquiryStatus.name }}</td>
+                <td>{% if inquiryStatus.complete %}Yes{% else %}No{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('inquirystatus_show', { 'id': inquiryStatus.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('inquirystatus_edit', { 'id': inquiryStatus.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('inquirystatus_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}

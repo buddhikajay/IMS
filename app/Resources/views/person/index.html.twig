@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Person list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nic</th>
+                <th>Name</th>
+                <th>Telephone</th>
+                <th>Email</th>
+                <th>School</th>
+                <th>District</th>
+                <th>Olenglish</th>
+                <th>Olmaths</th>
+                <th>Language</th>
+                <th>Algrades</th>
+                <th>Dob</th>
+                <th>Availabletime</th>
+                <th>Eduqualification</th>
+                <th>Workexperience</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for person in people %}
+            <tr>
+                <td><a href="{{ path('person_show', { 'id': person.id }) }}">{{ person.id }}</a></td>
+                <td>{{ person.nic }}</td>
+                <td>{{ person.name }}</td>
+                <td>{{ person.telephone }}</td>
+                <td>{{ person.email }}</td>
+                <td>{{ person.school }}</td>
+                <td>{{ person.district }}</td>
+                <td>{{ person.olEnglish }}</td>
+                <td>{{ person.olMaths }}</td>
+                <td>{{ person.language }}</td>
+                <td>{{ person.alGrades }}</td>
+                <td>{% if person.dob %}{{ person.dob|date('Y-m-d') }}{% endif %}</td>
+                <td>{% if person.availableTime %}{{ person.availableTime|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ person.eduQualification }}</td>
+                <td>{{ person.workExperience }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('person_show', { 'id': person.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('person_edit', { 'id': person.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('person_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}

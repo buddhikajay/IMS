@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Broadcast</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ broadcast.id }}</td>
+            </tr>
+            <tr>
+                <th>Action</th>
+                <td>{{ broadcast.action }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ broadcast.description }}</td>
+            </tr>
+            <tr>
+                <th>Criteria</th>
+                <td>{{ broadcast.criteria }}</td>
+            </tr>
+            <tr>
+                <th>Timestamp</th>
+                <td>{% if broadcast.timestamp %}{{ broadcast.timestamp|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Sentcount</th>
+                <td>{{ broadcast.sentCount }}</td>
+            </tr>
+            <tr>
+                <th>Deliveredcount</th>
+                <td>{{ broadcast.deliveredCount }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('broadcast_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('broadcast_edit', { 'id': broadcast.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

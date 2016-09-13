@@ -1,0 +1,30 @@
+AppBundle\Entity\InquiryAssign:
+    type: entity
+    table: null
+    repositoryClass: AppBundle\Repository\InquiryAssignRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        timestamp:
+            type: datetime
+    manyToOne:
+        inquiry:
+            targetEntity: Inquiry
+            joinColumn:
+                name: inquiry
+                referencedColumnName: id
+        councellor:
+            targetEntity: User
+            joinColumn:
+                name: councellor
+                referencedColumnName: id
+        assigner:
+            targetEntity: User
+            joinColumn:
+                name: assigner
+                referencedColumnName: id
+    lifecycleCallbacks: {  }

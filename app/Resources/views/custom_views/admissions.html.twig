@@ -1,0 +1,362 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <section class="content-header">
+        <h1>Admissions Management</h1>
+    </section>
+
+    <section class="content">
+        <div class="box-body">
+            <ul class="nav nav-tabs">
+
+                <li class="active"><a data-toggle="tab" href="#direct"><i
+                                class="fa fa-sort-amount-asc text-green fa-lg"></i> Direct Admissions</a></li>
+                <li><a data-toggle="tab" href="#inquiry"><i
+                                class="fa fa-book text-green fa-lg"></i> Inquiry Admissions</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="direct" class="tab-pane fade in active">
+                    <div class="box no-border col-md-12 col-lg-12">
+                        <ul class="products-list product-list-in-box">
+
+                            {% for directAdmission in directAdmissions %}
+                                <li class="item">
+                                    <a>
+                                        <div class="product-info" data-inq="{{ directAdmission.id }}"
+                                             data-id="{{ directAdmission.person.id }}"
+                                             data-email="{{ directAdmission.person.email }}"
+                                             onclick="grabData(this, 'direct')">
+                                            <div class="product-title">{{ directAdmission.person.name }}
+                                                {% if directAdmission.course == null %}
+                                                    <span class="label label-warning pull-right">Course Not Set</span>
+                                                {% else %}
+                                                    <span class="label label-default pull-right">{{ directAdmission.course.code }}</span>
+                                                {% endif %}
+                                            </div>
+                                            <span class="product-description">
+                                        <label>{{ directAdmission.counsellor.username }}</label>
+                                        <span class="label label-info pull-right">{{ directAdmission.created.format('y/m/d') }}</span>
+                                    </span>
+                                        </div>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="item">
+                                    <label>No New Direct Admissions</label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <div id="inquiry" class="tab-pane fade">
+                    <div class="box no-border col-md-12 col-lg-12">
+                        <ul class="products-list product-list-in-box">
+                            {% for inquiryAdmission in inquiryAdmissions %}
+                                <li class="item">
+                                    <a>
+                                        <div class="product-info" data-inq="{{ inquiryAdmission.id }}"
+                                             data-id="{{ inquiryAdmission.person.id }}"
+                                             data-email="{{ inquiryAdmission.person.email }}"
+                                             onclick="grabData(this, 'inq')">
+                                            <div class="product-title">{{ inquiryAdmission.person.name }}
+                                                {% if inquiryAdmission.course == null %}
+                                                    <span class="label label-warning pull-right">Course Not Set</span>
+                                                {% else %}
+                                                    <span class="label label-default pull-right">{{ inquiryAdmission.course.code }}</span>
+                                                {% endif %}
+                                            </div>
+                                            <span class="product-description">
+                                        <label>{{ inquiryAdmission.counsellor.username }}</label>
+                                        <span class="label label-info pull-right">{{ inquiryAdmission.created.format('y/m/d') }}</span>
+                                    </span>
+                                        </div>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="item">
+                                    <label>No New Inquiry Admissions</label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Keep this span to trig the modal after data grabbed by ajax request -->
+    <span id="pop_modal" data-toggle="modal" data-target="#showAdmissionModal"></span>
+
+    <!--  ********** Modals ********** -->
+
+    <!--  ********** Show Admissions *********** -->
+    <div class="modal fade" id="showAdmissionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document" style="width: 70%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" data-type="" data-inq="" id="modal_title">Jon Snow Application</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-7 col-lg-7">
+                            <div class="box box-primary">
+                                <div class="box-header">
+                                    <h4>Application Details</h4>
+                                </div>
+                                <div class="box-body">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <tr>
+                                                <th>Name</th>
+                                                <td id="modal_name">Jon Snow</td>
+                                            </tr>
+                                            <tr>
+                                                <th>School</th>
+                                                <td id="modal_school">The Wall International</td>
+                                            </tr>
+                                            <tr>
+                                                <th rowspan="2">OL Grades</th>
+                                                <td>
+                                                    <label>Mathematics: </label><span id="modal_olmaths"></span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label>English:</label> <span id="modal_olenglish"></span>
+                                                </td>
+                                            </tr>
+                                            <div id="al_results">
+                                                <tr>
+                                                    <th rowspan="3">AL Grades</th>
+                                                    <td>
+                                                        <label id="al_sub_1"> </label><span
+                                                                id="al_res_1"></span>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>
+                                                        <label id="al_sub_2"> </label><span
+                                                                id="al_res_2"></span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label id="al_sub_3"> </label><span
+                                                                id="al_res_3"></span>
+                                                    </td>
+                                                </tr>
+                                            </div>
+                                            <tr>
+                                                <th>Educational Qualifications</th>
+                                                <td id="modal_education">You know nothing jon snow</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Work Experience</th>
+                                                <td id="modal_work">Commander of the nights watch</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-lg-5">
+                            <div class="box box-primary">
+                                <div class="box-header">
+                                    <h4>Send Offer</h4>
+                                </div>
+                                <div class="box-body">
+                                    <div class="col-md-12 col-lg-12">
+                                        <div class="row">
+                                            <label>Email Presets</label>
+
+                                            <select class="form-control select2 select2-hidden-accessible"
+                                                    id="admission_email_preset" onclick="onChangeEmail()"
+                                                    style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                                <option selected="selected"></option>
+                                                {% for customEmail in customEmails %}
+                                                    <option data-code="{{ customEmail.name }}"
+                                                            data-subject="{{ customEmail.title }}"
+                                                            data-body="{{ customEmail.body }}"
+                                                    >{{ customEmail.name }}</option>
+                                                {% else %}
+                                                    <option disabled="disabled">No custom emails specified please
+                                                        contact
+                                                        System Admin
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <label>Send Email</label>
+                                        </div>
+                                        <div class="row">
+                                            <form action="#" method="post">
+                                                <div class="form-group">
+                                                    <input type="email" class="form-control" name="emailto"
+                                                           id="admission_email_to"
+                                                           placeholder="Email to:">
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" name="subject"
+                                                           id="admission_email_subject"
+                                                           placeholder="Subject">
+                                                </div>
+                                                <div>
+                                                    <textarea class="form-control" rows="5" id="admission_email_body"
+                                                              placeholder="Email message body"></textarea>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <button type="button" class="pull-right btn btn-success"
+                                                    onclick="sendEmailButton()"
+                                                    id="sendEmail">Send
+                                                <i class="fa fa-arrow-circle-right"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="admission_modal_close" class="btn btn-default" data-dismiss="modal">Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Testing send email functionality -->
+    <script>
+        function sendEmailButton() {
+
+            console.log($('#modal_title').attr('data-inq'));
+            console.log($('#modal_title').attr('data-type'));
+
+            var data = {
+                inquiry: $('#modal_title').attr('data-inq'),
+                type: $('#modal_title').attr('data-type')
+            };
+            $.ajax({
+                type: "POST",
+                url: '{{ path('new_admission') }}',
+                data: data,
+                dataType: "JSON",
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + " debug :" + response['debug']);
+                    sendEmail();
+                    $('#admission_modal_close').click();
+                    location.reload();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        }
+
+        function sendEmail() {
+            var email = $('#admission_email_to').val();
+            var subject = $('#admission_email_subject').val();
+            var body = $('#admission_email_body').val();
+
+            //should set to email here or in back end script
+            var data = {subject: subject, body: body, email: email};
+
+            console.log(data);
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('send_email') }}',
+                data: data,
+                dataType: "JSON",
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + " debug :" + response['debug']);
+
+                    //close modal
+                    $('#modal-close-span').click();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        }
+    </script>
+
+    <!-- Real-time data grabbing -->
+    <script>
+        function grabData(item, _type) {
+            var id = $(item).attr('data-id');
+            var inq_id = $(item).attr('data-inq');
+            var data = {id: id};
+            $.ajax({
+                type: "POST",
+                url: '{{ path('grab_person') }}',
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + " debug :" + response['debug']);
+                    fillModal(jQuery.parseJSON(response['person']), inq_id, _type);
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+
+        }
+
+        function fillModal(person, inq_id, _type) {
+            console.log(person);
+            $('#modal_title').html(person['name'] + " Application");
+            $('#modal_title').attr('data-inq', inq_id);
+            $('#modal_title').attr('data-type', _type);
+            $('#modal_name').html(person['name']);
+            $('#modal_school').html(person['school']);
+            $('#modal_olenglish').html(person['olEnglish']);
+            $('#modal_olmaths').html(person['olMaths']);
+            $('#modal_education').html(person['eduQualification']);
+            $('#modal_work').html(person['workExperience']);
+            console.log("email: " + person['email']);
+            $('#admission_email_to').val(person['email']);
+
+            var ALResults = person['alGrades'];
+
+            var counter = 1;
+            jQuery.each(ALResults, function (sub, result) {
+                console.log(sub);
+                {% for subject in alSubjects %}
+
+                if (sub == '{{ subject.code }}') {
+                    console.log('sdfsd' + '{{ subject.code }}');
+                    $('#al_sub_' + counter).html('{{ subject.name }}' + ':   ');
+                    $('#al_res_' + counter).html(result);
+                    ++counter;
+                    {# continue #}
+                }
+                {% endfor %}
+            });
+
+            $('#pop_modal').click();
+        }
+    </script>
+
+    <script>
+        function onChangeEmail() {
+            var emailName = $('#admission_email_preset option:selected').val();
+            var emailSubject = $('#admission_email_preset option:selected').attr('data-subject');
+            var emailBody = $('#admission_email_preset option:selected').attr('data-body');
+
+            $('#admission_email_subject').val(emailSubject);
+            $('#admission_email_body').val(emailBody);
+        }
+    </script>
+
+{% endblock %}

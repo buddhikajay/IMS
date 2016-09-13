@@ -1,0 +1,27 @@
+AppBundle\Entity\BulkFile:
+    type: entity
+    table: null
+    repositoryClass: AppBundle\Repository\BulkFileRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        name:
+            type: string
+            length: 255
+        filePath:
+            type: string
+            length: 255
+            unique: true
+        columnMapping:
+            type: json_array
+        timestamp:
+            type: datetime
+        complete:
+            type: boolean
+        headers:
+            type: boolean
+    lifecycleCallbacks: {  }

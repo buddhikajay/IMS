@@ -1,0 +1,278 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <section class="content-header">
+        <h1>Course Management<span class="pull-right"><button class="btn btn-default" data-toggle="modal"
+                                                              data-target="#create">+ Add New</button> </span></h1>
+
+    </section>
+    <section class="content">
+        <ul id="courses_list" class="products-list product-list-in-box">
+
+            {% for course in courses %}
+                <li class="item" id="course_{{ course.id }}">
+                    <div class="product-img">
+                        <i class="fa fa-3x fa-graduation-cap" aria-hidden="true"></i>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-title">
+                            <span id="name_course_{{ course.id }}" data-name="{{ course.name }}">
+                                {{ course.name }}
+                            </span>
+                            <span class="pull-right btn-box-tool">
+                                <a href="#">
+                                    <i class="fa fa-trash fa-lg" id="delete_button" data-target="#delete" data-toggle="modal"
+                                       aria-hidden="true" data-id="{{ course.id }}" onclick="delete_item(this)"></i>
+                                </a>
+                            </span>
+                            <div class="pull-right btn-box-tool">
+                                <a href="#">
+                                    <i class="fa fa-pencil fa-lg" data-toggle="modal"
+                                       data-target="#edit" aria-hidden="true" data-id="{{ course.id }}"
+                                       onclick="edit_item(this)"></i>
+                                </a>
+                            </div>
+                            <i class="label label-warning " id="point_course_{{ course.id }}"
+                               data-point="{{ course.scoreRequired }}">
+                                {{ course.scoreRequired }}
+                            </i>
+                            <i class="label label-default " id="code_course_{{ course.id }}"
+                               data-code="{{ course.code }}">
+                                {{ course.code }}
+                            </i>
+
+                        </div>
+
+                        <span class="product-description" id="description_course_{{ course.id }}"
+                              data-description="{{ course.description }}">
+                          {{ course.description }}
+                        </span>
+                    </div>
+                </li>
+            {% else %}
+                <li class="item">
+                    <div class="product-info">
+                        <div class="product-title">No Courses Found</div>
+                    </div>
+                </li>
+            {% endfor %}
+            <!-- /.item -->
+
+        </ul>
+    </section>
+
+    <!-- Modal : Create Course-->
+    <div class="modal fade" id="create" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Create New Course</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <input id="modal_new_code" class="form-control" type="text" placeholder="Course Code">
+                        </div>
+                        <div class="form-group">
+                            <input id="modal_new_name" class="form-control" type="text" placeholder="Course Name">
+                        </div>
+                        <div class="form-group">
+                            <input id="modal_new_description" class="form-control" type="text"
+                                   placeholder="Description">
+                        </div>
+                        <div class="form-group">
+                            <input id="modal_new_value" class="form-control" type="text"
+                                   placeholder="Minimum Required Score">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="new_close" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" id="new_submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal : Edit Course-->
+    <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Edit Course</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <input class="form-control" id="modal_edit_code" type="text" placeholder="Course Code">
+                        </div>
+                        <div class="form-group">
+                            <input id="modal_edit_name" class="form-control" type="text" placeholder="Course Name">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" id="modal_edit_description" type="text"
+                                   placeholder="Description">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" id="modal_edit_score" type="text"
+                                   placeholder="Minimum Required Score">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="edit_close" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" id="edit_submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal : Confirm Delete -->
+    <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Delete Course</h4>
+                </div>
+                <div class="modal-body">
+                    <span>Do you really want to remove the record?</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="delete_close" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" id="delete_submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% javascripts  '@AppBundle/Resources/public/js/jquery-2.2.3.min.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <!-- Create New Ajax -->
+    <script>
+        $('#new_submit').click(function () {
+            var code = $('#modal_new_code').val();
+            var name = $('#modal_new_name').val();
+            var description = $('#modal_new_description').val();
+            var minPoint = $('#modal_new_value').val();
+
+            var data = {code: code, name: name, description: description, minPoint: minPoint};
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('course_new') }}',
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + " debug :" + response['debug']);
+                    inject_html(data);
+                    $('#new_close').click();
+                    location.reload();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        });
+
+        function inject_html(data) {
+            //@todo inject new html element
+
+        }
+    </script>
+
+    <!-- Delete Ajax -->
+    <script>
+        function delete_item(item) {
+            var id = $(item).attr('data-id');
+            $('#delete_submit').attr('data-id',id);
+            console.log('deleting : ' + id);
+
+        }
+
+        $('#delete_submit').click(function () {
+            var id = $('#delete_submit').attr('data-id');
+            var data = {id: id};
+            $.ajax({
+                type: 'DELETE',
+                url: '{{ path('courses_delete') }}',
+                data: data,
+                dataType: 'json',
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + ' , debug : ' + response['debug']);
+                    $('#course_' + id).fadeOut(500, function () {
+                        //any ost animation after fading
+                    });
+                    $('#delete_close').click();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        });
+
+    </script>
+
+    <!-- Edit Script-->
+    <script>
+        function edit_item(item) {
+            var id = $(item).attr('data-id');
+            console.log('editing item : ' + id);
+
+            var code = $('#code_course_' + id).attr('data-code');
+            var name = $('#name_course_' + id).attr('data-name');
+            var description = $('#description_course_' + id).attr('data-description');
+            var score = $('#point_course_' + id).attr('data-point');
+
+            console.log(code + "," + name + "," + description + "," + score);
+
+            $('#modal_edit_code').val(code);
+            $('#modal_edit_name').val(name);
+            $('#modal_edit_description').val(description);
+            $('#modal_edit_score').val(score);
+            $('#edit_submit').attr("data-id", id);
+        }
+
+        $('#edit_submit').click(function () {
+            var code = $('#modal_edit_code').val();
+            var name = $('#modal_edit_name').val();
+            var description = $('#modal_edit_description').val();
+            var score = $('#modal_edit_score').val();
+            var id = $('#edit_submit').attr('data-id');
+
+            var data = {id: id, code: code, name: name, description: description, minPoint: score};
+            console.log(data);
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('course_update') }}',
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + ", debug " + response['debug']);
+                    update_html(data);
+                    $('#edit_close').click();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        });
+
+        function update_html(data) {
+            location.reload();
+            $('#name_course_' + data['id']).html(data['name']).attr("data-name", data['name']);
+            $('#point_course_' + data['id']).html(data['point']).attr('data-point', data['point']);
+            $('#code_course_' + data['id']).html(data['code']).attr('data-code', data['code']);
+            $('#description_course_' + data['id']).html(data['description']).attr('data-description', data['description']);
+        }
+    </script>
+{% endblock %}
+

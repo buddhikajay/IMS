@@ -1,0 +1,1134 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <section class="content-header">
+        <h1>Personal Inquiries</h1>
+    </section>
+
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12 col-lg-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <div class="col-md-3 col-lg-3">
+                            <div class="input-group">
+                                <input type="text" name="q" class="form-control" placeholder="Search...">
+                            <span class="input-group-btn">
+                                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i
+                                            class="fa fa-search"></i>
+                                </button>
+                            </span>
+                            </div>
+                        </div>
+                        <div class="col-md-7 col-lg-7" style="text-align:center">
+                            All
+                        </div>
+                        <div class="col-md-2 col-lg-2">
+                            <button type="button" class="btn btn-default" data-toggle="modal"
+                                    data-target="#newInquiryModal" style="float: right">New
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+
+
+                    <div class="box-body">
+                        <ul class="nav nav-tabs">
+
+                            <li class="active"><a data-toggle="tab" href="#pending"><i
+                                            class="fa fa-hourglass-half text-green fa-lg"></i> Pending</a></li>
+                            <li><a data-toggle="tab" href="#incomplete"><i
+                                            class="fa fa-clock-o text-green fa-lg"></i> Incomplete</a></li>
+                            <li><a data-toggle="tab" href="#complete"><i
+                                            class="fa fa-check text-green fa-lg"></i> Complete</a></li>
+                        </ul>
+
+                        <!-- Keep this span to trig the modal after data grabbed by ajax reuest -->
+                        <span id="pop_modal" data-toggle="modal" data-target="#showInquiryModal"></span>
+
+                        <div class="tab-content">
+                            <div id="pending" class="tab-pane fade in active">
+                                <ul class="products-list product-list-in-box">
+
+                                    {% for pendingInquiry in pendingInquiries %}
+                                        <li class="item" data-id="{{ pendingInquiry.id }}" onclick="pendingClick(this)">
+                                            <a>
+                                                <div class="product-info">
+                                                    <div class="product-title">{{ pendingInquiry.person.name }}
+                                                        {% if pendingInquiry.course is empty %}
+                                                            <span class="label label-default pull-right">Course Undefined</span>
+                                                        {% else %}
+                                                            <span class="label label-default pull-right">{{ pendingInquiry.course.code }}</span>
+                                                        {% endif %}
+
+
+                                                    </div>
+                                                    <span class="product-description">
+                                                        {{ pendingInquiry.created.format("d/m/Y") }}
+                                                        <label>{{ pendingInquiry.counsellor.username }}</label>
+                                                        <span class="label label-info pull-right">{{ pendingInquiry.lastModified.format("d/m/Y") }}</span>
+                                                    </span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    {% else %}
+                                        <li class="item">
+                                            <div class="product-info">
+                                                <div class="product-title">No Pending Inquiries Found</div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div id="incomplete" class="tab-pane fade in">
+                                <ul class="products-list product-list-in-box">
+                                    {% set a = 1 %}
+                                    {% for inquiry in allInquiries %}
+                                        {% if inquiry.inquiryStatus.complete == 0 %}
+                                            {% set a = 0 %}
+                                            <li class="item" data-id="{{ inquiry.id }}" onclick="followup(this)">
+                                                <a>
+                                                    <div class="product-info">
+                                                        <div class="product-title">{{ inquiry.person.name }}
+
+                                                            {% if inquiry.course is empty %}
+                                                                <span class="label label-default pull-right">Course Undefined</span>
+                                                            {% else %}
+                                                                <span class="label label-default pull-right">{{ inquiry.course.code }}</span>
+                                                            {% endif %}
+
+                                                        </div>
+                                                        <span class="product-description">
+                                                            {{ inquiry.created.format("d/m/Y") }}
+                                                            <label>{{ inquiry.counsellor.username }}</label>
+                                                            <span class="label label-info pull-right">{{ inquiry.lastModified.format("d/m/Y") }}</span>
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    {% else %}
+                                        <li class="item">
+                                            <div class="product-info">
+                                                <div class="product-title">No Incomplete Inquiries Found</div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                    {% if a %}
+                                        <li class="item">
+                                            <div class="product-info">
+                                                <div class="product-title">No Complete Inquiries Found</div>
+                                            </div>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            <div id="complete" class="tab-pane fade in">
+                                <ul class="products-list product-list-in-box">
+                                    {% set a = 1 %}
+                                    {% for inquiry in allInquiries %}
+                                        {% if inquiry.inquiryStatus.complete == 1 %}
+                                            {% set a = 0 %}
+                                            <li class="item" data-id="{{ inquiry.id }}" onclick="followup(this)">
+                                                <a>
+                                                    <div class="product-info">
+                                                        <div class="product-title">{{ inquiry.person.name }}
+                                                            {% if inquiry.course is empty %}
+                                                                <span class="label label-default pull-right">Course Undefined</span>
+                                                            {% else %}
+                                                                <span class="label label-default pull-right">{{ inquiry.course.code }}</span>
+                                                            {% endif %}
+                                                        </div>
+                                                            <span class="product-description">
+                                                                {{ inquiry.created.format("d/m/Y") }}
+                                                                <label>{{ inquiry.counsellor.username }}</label>
+                                                                <span class="label label-info pull-right">{{ inquiry.lastModified.format("d/m/Y") }}</span>
+                                                            </span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    {% else %}
+                                        <li class="item">
+                                            <div class="product-info">
+                                                <div class="product-title">No Complete Inquiries Found</div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                    {% if a %}
+                                        <li class="item">
+                                            <div class="product-info">
+                                                <div class="product-title">No Complete Inquiries Found</div>
+                                            </div>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ************* modals ****************** -->
+        <!-- show modal -->
+        <div class="modal" id="showInquiryModal">
+            <div class="modal-dialog" style="width:75%">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                id="modal-close-button">
+                            <span aria-hidden="true" data-dismiss="modal" id="modal-close-span">&times;</span></button>
+
+                        <div class="col-md-8 col-lg-8" style="text-align:left">
+                            <h4 class="modal-title" id="show-inq-title" data-id="bb">James Potter</h4>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6">
+                                <label id="show-inq-nic">110465M</label>
+                                <br>
+                                <p id="show-inq-date">2016 April 1</p>
+                                <br>
+                                <label id="show-inq-course">MBA</label>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <label id="show-inq-prob">Probability</label>
+                                <br>
+                                <p id="show-inq-counsellor">Sasindu L.</p>
+                                <br>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-7 col-lg-7">
+                                <!-- **************************************************************************************************************-->
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a data-toggle="tab" href="#tab_followup_all"><i
+                                                    class="fa fa-check text-green fa-lg"></i>All</a></li>
+                                    <li><a data-toggle="tab" href="#tab_followup_call"><i
+                                                    class="fa fa-phone text-green fa-lg"></i>Call</a></li>
+                                    <li><a data-toggle="tab" href="#tab_followup_sms"><i
+                                                    class="fa fa-mobile-phone text-green fa-lg"></i> SMS</a></li>
+                                    <li><a data-toggle="tab" href="#tab_followup_email"><i
+                                                    class="fa fa-envelope text-green fa-lg"></i> Email</a></li>
+                                    <li><a data-toggle="tab" href="#tab_followup_walkin"><i
+                                                    class="fa fa-institution text-green fa-lg"></i> WalkIn</a></li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div id="tab_followup_all" class="tab-pane fade in active">
+                                        <div class="box box-success" id="show-inq-list-all">
+                                            <label>No Followups</label>
+                                        </div>
+                                    </div>
+                                    <div id="tab_followup_call" class="tab-pane fade in">
+                                        <div class="box box-success" id="show-inq-list-call">
+                                            <label>No Followups by calls</label>
+                                        </div>
+                                    </div>
+
+                                    <div id="tab_followup_sms" class="tab-pane fade in">
+                                        <div class="box box-success" id="show-inq-list-sms">
+                                            <label>No Followups by SMS</label>
+                                        </div>
+                                    </div>
+                                    <div id="tab_followup_email" class="tab-pane fade in">
+                                        <div class="box box-success" id="show-inq-list-email">
+                                            <label>No Followups by Email</label>
+                                        </div>
+                                    </div>
+                                    <div id="tab_followup_walkin" class="tab-pane fade in ">
+                                        <div class="box box-success" id="show-inq-list-walkin">
+
+                                            <label>No Followups by Walk In</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="col-md-5 col-lg-5">
+                                <div class="box box-success">
+                                    <div class="box-header">
+                                        <div class="col-md-4 col-lg-4">
+                                            <strong>Actions</strong>
+                                        </div>
+                                    </div>
+
+                                    <div class="box-body">
+                                        <ul class="nav nav-tabs">
+                                            <li class="active"><a data-toggle="tab" href="#call"> <i
+                                                            class="fa fa-phone text-green fa-lg"></i></a></li>
+                                            <li><a data-toggle="tab" href="#sms"><i
+                                                            class="fa fa-mobile-phone text-green fa-lg"></i></a></li>
+                                            <li><a data-toggle="tab" href="#email"><i
+                                                            class="fa fa-envelope text-green fa-lg"></i></a></li>
+                                            <li><a data-toggle="tab" href="#walkin"><i
+                                                            class="fa fa-institution text-green fa-lg"></i></a></li>
+                                        </ul>
+
+                                        <div class="tab-content">
+                                            <div id="call" class="tab-pane fade in active">
+                                                <br>
+                                                <div class="row">
+                                                    <label>Phone Call</label>
+                                                </div>
+                                                <div class="row">
+                                                    <textarea class="form-control" rows="5" id="followup-call-summary"
+                                                              placeholder="Summary of phone call"></textarea>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <button type="button" id="followup_call"
+                                                            class="btn btn-success pull-right">
+                                                        Submit
+                                                    </button>
+                                                </div>
+
+                                            </div>
+                                            <div id="sms" class="tab-pane fade">
+                                                <br>
+                                                <div class="row">
+                                                    <label>Text Message</label>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-3 col-lg-3">
+                                                        <label>Mobile</label>
+                                                    </div>
+                                                    <div class="col-md-9 col-lg-9">
+                                                        <input class="form-control" type="text"
+                                                               id="followup-sms-number"
+                                                               placeholder="0712200220">
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <textarea class="form-control" rows="5"
+                                                              id="followup-sms-body"
+                                                              placeholder="Text message body"></textarea>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <button type="button" class="pull-right btn btn-success"
+                                                            id="followup_sms">Send SMS
+                                                        <i class="fa fa-arrow-circle-right"></i></button>
+                                                </div>
+                                            </div>
+                                            <div id="email" class="tab-pane fade">
+                                                <br>
+                                                <div class="row">
+                                                    <label>Send Email</label>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <form action="#" method="post">
+                                                        <div class="form-group">
+                                                            <input type="email" class="form-control" name="emailto"
+                                                                   id="followup-email-to"
+                                                                   placeholder="Email to:">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <input type="text" class="form-control" name="subject"
+                                                                   id="followup-email-subject"
+                                                                   placeholder="Subject">
+                                                        </div>
+                                                        <div>
+                                                                <textarea class="form-control" rows="5"
+                                                                          id="followup-email-body"
+                                                                          placeholder="Email message body"></textarea>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <button type="button" class="pull-right btn btn-success"
+                                                            id="followup_mail">Send Email
+                                                        <i class="fa fa-arrow-circle-right"></i></button>
+                                                </div>
+                                            </div>
+                                            <div id="walkin" class="tab-pane fade">
+                                                <br>
+                                                <div class="row">
+                                                    <label>Walk In</label>
+                                                    <span class="text-muted pull-right">8:03 PM</span>
+                                                </div>
+                                                <div class="row">
+                                                    <textarea class="form-control" rows="5"
+                                                              id="followup-walkin-summary"
+                                                              placeholder="Summary of visit"></textarea>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <button type="button" class="btn btn-success pull-right"
+                                                            id="followup_walkIn">
+                                                        Submit
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <div class="col-md-2 col-lg-2">
+                            <label>Probability</label>
+                        </div>
+                        <div class="col-md-3 col-lg-3">
+                            <select class="form-control select2 select2-hidden-accessible"
+                                    id="show_inquiry_probability" name="show_inquiry_probability"
+                                    style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                <option selected="selected" value=""></option>
+                                <option value="0">0 - negative</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5 - positive</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-2 col-lg-2">
+                            <label>Status</label>
+                        </div>
+                        <div class="col-md-3 col-lg-3">
+                            <select class="form-control select2 select2-hidden-accessible"
+                                    id="inquiry_update_status" name="inquiry_update_status"
+                                    style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                {% for inquiryStatus in inquiryStatuses %}
+                                    <option data-code="{{ inquiryStatus.code }}"
+                                            value="{{ inquiryStatus.name }}">{{ inquiryStatus.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button class="btn btn-default pull right" id="change-status">Change Status</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- new inquiry modal -->
+        <div class="modal" id="newInquiryModal">
+            <div class="modal-dialog" style="width:65%">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+
+                        <div class="col-md-8 col-lg-8" style="text-align:left">
+                            <h4 class="modal-title">Create New Inquiry</h4>
+                        </div>
+                        <div class="col-md-4 col-lg-4">
+                            <button type="button" id="new_inquiry_submit" class="btn btn-success pull-right"
+                                    data-dismiss="modal">Create
+                            </button>
+                            <button type="button" id="new_inquiry_cancel" class="btn btn-default pull-right"
+                                    data-dismiss="modal">Cancel
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <label>Mode Of Inquiry</label>
+                                    <select class="form-control select2 select2-hidden-accessible"
+                                            id="new_inquiry_modeOfInquiry"
+                                            style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                        {% for inquiryMode in inquiryModes %}
+                                            <option data-code="{{ inquiryMode.code }}">{{ inquiryMode.name }}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                    <label>Name</label>
+                                    <input type="text" id="new_inquiry_name" class="form-control" placeholder="">
+
+                                    <label>Course</label>
+                                    <div class="input-group">
+                                            <span class="input-group-addon"><i
+                                                        class="fa fa-circle-o text-red"
+                                                        id="new_inquiry_circle"></i></span>
+                                        <select class="form-control select2 select2-hidden-accessible text-red"
+                                                id="new_inquiry_course"
+                                                style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                            <option data-code="" data-min="0"></option>
+                                            {% for course in courses %}
+                                                <option data-code="{{ course.code }}"
+                                                        data-min="{{ course.scoreRequired }}">{{ course.code }}
+                                                    : {{ course.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 col-lg-6">
+                                    <div class="box-body">
+                                        <label>Address</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
+                                            <input class="form-control" id="new_inquiry_st1" type="text"
+                                                   placeholder="Street">
+                                        </div>
+                                        <input class="form-control" id="new_inquiry_st2" type="text"
+                                               placeholder="Street">
+                                        <input class="form-control" id="new_inquiry_city" type="text"
+                                               placeholder="City">
+                                        <input class="form-control" id="new_inquiry_district" type="text"
+                                               placeholder="District">
+                                    </div>
+
+                                    <div class="box-body">
+                                        <label>Telephone</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-phone"></i></span>
+                                            <input class="form-control" id="new_inquiry_tel" type="text"
+                                                   placeholder="Telephone Number">
+                                        </div>
+                                    </div>
+
+                                    <div class="box-body">
+                                        <label>Email</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+                                            <input class="form-control" id="new_inquiry_email" type="text"
+                                                   placeholder="Email">
+                                        </div>
+                                    </div>
+
+                                    <div class="box-body">
+                                        <label>NIC</label>
+                                        <input class="form-control" id="new_inquiry_nic" type="text"
+                                               placeholder="Identity">
+                                    </div>
+
+                                    <div class="box-body">
+                                        <label>Language</label>
+                                        <select class="form-control select2 select2-hidden-accessible"
+                                                id="new_inquiry_lang"
+                                                style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                            <option selected="selected" data-prob=""></option>
+                                            <option data-prob="Sinhala">Sinhala</option>
+                                            <option data-prob="English">English</option>
+                                            <option data-prob="Tamil">Tamil</option>
+                                        </select>
+                                    </div>
+
+
+                                    <div class="box-body">
+                                        <label>Date of Birth</label>
+                                        <div class="input-group date">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                            <input type="date" id="new_inquiry_dob" class="form-control pull-right"
+                                                   placeholder="Date Of Birth">
+                                        </div>
+                                    </div>
+
+                                    <div class="box-body">
+                                        <label>Description</label>
+                                        <textarea class="form-control" rows="3" id="new_inquiry_description"
+                                                  placeholder="Description about student."></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-lg-6">
+                                    <div class="box-body">
+                                        <label>When to contact</label>
+                                        <div class="input-group date">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-clock-o"></i>
+                                            </div>
+                                            <input type="time" class="form-control pull-right"
+                                                   id="new_inquiry_freetime"
+                                                   placeholder="Free Time">
+                                        </div>
+                                    </div>
+
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-md-6 col-lg-6">
+                                                <label>Probability</label>
+                                            </div>
+                                            <div class="col-md-6 col-lg-6">
+                                                <select class="form-control select2 select2-hidden-accessible"
+                                                        id="new_inquiry_probability"
+                                                        style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                                    <option selected="selected" data-prob=""></option>
+                                                    <option data-prob="0">0 - negative</option>
+                                                    <option data-prob="1">1</option>
+                                                    <option data-prob="2">2</option>
+                                                    <option data-prob="3">3</option>
+                                                    <option data-prob="4">4</option>
+                                                    <option data-prob="5">5 - positive</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <label>O/L</label>
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-md-3 col-lg-3">
+                                                <label>Maths</label>
+                                            </div>
+                                            <div class="col-md-3 col-lg-3">
+                                                <select class="form-control select2 select2-hidden-accessible"
+                                                        onclick="changeGrade()"
+                                                        id="new_inquiry_olmath"
+                                                        style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                                    <option>A</option>
+                                                    <option>B</option>
+                                                    <option>C</option>
+                                                    <option>D</option>
+                                                    <option>E</option>
+                                                    <option selected="selected">-</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3 col-lg-3">
+                                                <label>English</label>
+                                            </div>
+                                            <div class="col-md-3 col-lg-3">
+                                                <select class="form-control select2 select2-hidden-accessible"
+                                                        onclick="changeGrade()"
+                                                        id="new_inquiry_oleng"
+                                                        style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                                    <option>A</option>
+                                                    <option>B</option>
+                                                    <option>C</option>
+                                                    <option>D</option>
+                                                    <option>E</option>
+                                                    <option selected="selected">-</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <label>A/L</label>
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <select class="form-control select2 select2-hidden-accessible"
+                                                        id="new_inquiry_al1"
+                                                        style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                                    {% for alsubject in alsubjects %}
+                                                        <option data-code="{{ alsubject.code }}">{{ alsubject.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <select class="form-control select2 select2-hidden-accessible"
+                                                        id="new_inquiry_al1result" onclick="changeGrade()"
+                                                        style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                                    <option>A</option>
+                                                    <option>B</option>
+                                                    <option>C</option>
+                                                    <option>D</option>
+                                                    <option>E</option>
+                                                    <option selected="selected">-</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <select class="form-control select2 select2-hidden-accessible"
+                                                        id="new_inquiry_al2"
+                                                        style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                                    {% for alsubject in alsubjects %}
+                                                        <option data-code="{{ alsubject.code }}">{{ alsubject.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <select class="form-control select2 select2-hidden-accessible"
+                                                        onclick="changeGrade()"
+                                                        id="new_inquiry_al2result"
+                                                        style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                                    <option>A</option>
+                                                    <option>B</option>
+                                                    <option>C</option>
+                                                    <option>D</option>
+                                                    <option>E</option>
+                                                    <option selected="selected">-</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <select class="form-control select2 select2-hidden-accessible"
+                                                        id="new_inquiry_al3"
+                                                        style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                                    {% for alsubject in alsubjects %}
+                                                        <option data-code="{{ alsubject.code }}">{{ alsubject.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <select class="form-control select2 select2-hidden-accessible"
+                                                        id="new_inquiry_al3result"
+                                                        onclick="changeGrade()"
+                                                        style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                                    <option>A</option>
+                                                    <option>B</option>
+                                                    <option>C</option>
+                                                    <option>D</option>
+                                                    <option>E</option>
+                                                    <option selected="selected">-</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="box-body">
+                                        <label>School</label>
+                                        <input class="form-control" id="new_inquiry_school" type="text"
+                                               placeholder="School">
+                                    </div>
+
+                                    <div class="box-body">
+                                        <label>Highest qualification other than A/L</label>
+                                        <textarea class="form-control" rows="3" id="new_inquiry_quali"
+                                                  placeholder="What and where"></textarea>
+                                    </div>
+
+                                    <div class="box-body">
+                                        <label>Work experience</label>
+                                        <textarea class="form-control" rows="3" id="new_inquiry_work"
+                                                  placeholder="Duration and where"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+        <!-- @TODO give capability to search user -->
+    </section>
+
+    {% javascripts  '@AppBundle/Resources/public/js/jquery-2.2.3.min.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {% javascripts  '@AppBundle/Resources/public/js/bootstrap.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <!-- change status -->
+    <script>
+        $("#change-status").click(function () {
+            var selected = $('select[name=inquiry_update_status]').val();
+            var prob = $('select[name=show_inquiry_probability]').val();
+            var inquiryID = $('#show-inq-title').attr('data-id');
+            var data = {
+                id: inquiryID,
+                status: selected,
+                prob: prob
+            };
+            $.ajax({
+                type: "POST",
+                url: '{{ path('inquiry_status_change') }}',
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    //close modal
+                    $('#modal-close-span').click();
+                    $('#modal-close-span').click();
+
+                    //TODO to refresh page
+                    location.reload();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        });
+    </script>
+
+    <!-- change grade -->
+    <script>
+        function changeGrade() {
+            var total = 0;
+            var minimum = $('#new_inquiry_course option:selected').attr("data-min");
+
+            total += getValueOfGrade($('#new_inquiry_oleng option:selected').text());
+            total += getValueOfGrade($('#new_inquiry_olmath option:selected').text());
+            total += getValueOfGrade($('#new_inquiry_al1result option:selected').text());
+            total += getValueOfGrade($('#new_inquiry_al2result option:selected').text());
+            total += getValueOfGrade($('#new_inquiry_al3result option:selected').text());
+
+            // console.log(total + " ?? " + minimum);
+
+            if (total > minimum) {
+                $('#new_inquiry_circle').removeClass('text-red').addClass('text-green');
+                $('#new_inquiry_course').removeClass('text-red').addClass('text-green');
+            }
+        }
+
+        function getValueOfGrade(text) {
+            if (text == "A") {
+                return 120;
+            } else if (text == "B") {
+                return 100;
+            } else if (text == "C") {
+                return 80;
+            } else if (text == "D") {
+                return 60;
+            } else if (text == "E") {
+                return 40;
+            } else {
+                return 0;
+            }
+        }
+    </script>
+
+
+    <!-- new inquiry -->
+    <script>
+        $('#new_inquiry_submit').click(function () {
+            var modeOfInquiry = $("#new_inquiry_modeOfInquiry option:selected").attr('data-code');
+            var name = $("#new_inquiry_name").val();
+            var course = $("#new_inquiry_course option:selected").attr('data-code');
+            var add_st1 = $("#new_inquiry_st1").val();
+            var add_st2 = $("#new_inquiry_st2").val();
+            var add_city = $("#new_inquiry_city").val();
+            var add_district = $("#new_inquiry_district").val();
+            var nic = $("#new_inquiry_nic").val();
+            var dob = $("#new_inquiry_dob").val();
+            var description = $("#new_inquiry_description").val();
+            var freeTime = $("#new_inquiry_freetime").val();
+            var prob = $("#new_inquiry_probability option:selected").attr('data-prob');
+            var olmath = $("#new_inquiry_olmath option:selected").text();
+            var oleng = $("#new_inquiry_oleng option:selected").text();
+            var al1 = $("#new_inquiry_al1 option:selected").attr('data-code');
+            var al2 = $("#new_inquiry_al2 option:selected").attr('data-code');
+            var al3 = $("#new_inquiry_al3 option:selected").attr('data-code');
+            var al1result = $("#new_inquiry_al1result option:selected").text();
+            var al2result = $("#new_inquiry_al2result option:selected").text();
+            var al3result = $("#new_inquiry_al3result option:selected").text();
+            var school = $("#new_inquiry_school").val();
+            var quali = $("#new_inquiry_quali").val();
+            var work = $("#new_inquiry_work").val();
+            var tel = $('#new_inquiry_tel').val();
+            var email = $('#new_inquiry_email').val();
+            var lang = $("#new_inquiry_lang option:selected").text();
+
+            var data = {
+                moi: modeOfInquiry,
+                name: name,
+                course: course,
+                add_st1: add_st1,
+                add_st2: add_st2,
+                add_city: add_city,
+                add_district: add_district,
+                nic: nic,
+                dob: dob,
+                description: description,
+                freeTime: freeTime,
+                prob: prob,
+                olmath: olmath,
+                oleng: oleng,
+                al1: al1,
+                al2: al2,
+                al3: al3,
+                al1result: al1result,
+                al2result: al2result,
+                al3result: al3result,
+                school: school,
+                quali: quali,
+                work: work,
+                tel: tel,
+                email: email,
+                lang: lang
+            };
+
+            console.log(data);
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('inquiries_new') }}',
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + " debug :" + response['debug']);
+                    inject_html(data);
+                    $('#new_IS_close').click();
+                    location.reload();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        });
+
+        function inject_html(data) {
+            //@todo inject new html element
+        }
+    </script>
+
+    <!-- followup call -->
+    <script>
+        $('#followup_call').click(function () {
+            var code = "Call";
+            var summary = $('#followup-call-summary').val();
+            var inquiryID = $('#show-inq-title').attr('data-id');
+
+            var data = {code: code, summary: summary, inquiryID: inquiryID};
+            createNewFollowup(data);
+        });
+    </script>
+
+    <!-- followup sms -->
+    <script>
+        $('#followup_sms').click(function () {
+            var code = "SMS";
+            var summary = "Send to: " + $('#followup-sms-number').val() + "\n" + $('#followup-sms-body').val();
+            var inquiryID = $('#show-inq-title').attr('data-id');
+
+            var data = {code: code, summary: summary, inquiryID: inquiryID};
+            createNewFollowup(data);
+        });
+    </script>
+
+    <!-- followup email -->
+    <script>
+        $('#followup_mail').click(function () {
+            var code = "Email";
+            var summary = "Send to: " + $('#followup-email-to').val() + "\n" + $('#followup-email-subject').val() + "\n" + $('#followup-email-body').val();
+            var inquiryID = $('#show-inq-title').attr('data-id');
+
+            var data = {code: code, summary: summary, inquiryID: inquiryID};
+            sendMail();
+            createNewFollowup(data);
+        });
+    </script>
+
+    <!-- followup walkin -->
+    <script>
+        $('#followup_walkIn').click(function () {
+            var code = "Walk In";
+            var summary = $('#followup-walkin-summary').val();
+            var inquiryID = $('#show-inq-title').attr('data-id');
+
+            var data = {code: code, summary: summary, inquiryID: inquiryID};
+            createNewFollowup(data);
+        });
+    </script>
+
+    <!-- pending item click -->
+    <script>
+        function pendingClick(item) {
+            //change status from pending to following
+            var id = $(item).attr('data-id');
+            var data = {
+                id: id,
+                status: "following"
+            };
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('inquiry_status_change') }}',
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    //call followup
+                    //console.log(response);
+                    followup(item);
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+
+        }
+    </script>
+
+    <script>
+        function createNewFollowup(data) {
+            $.ajax({
+                type: "POST",
+                url: '{{ path('set_followup_call') }}',
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + ", debug " + response['debug']);
+                    $('#modal-close-button').click();
+                    location.reload();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        }
+    </script>
+
+
+    <!-- loading followup modal -->
+    <script>
+        function followup(item) {
+            var id = $(item).attr('data-id');
+            console.log('Following Up Inquiry : ' + id);
+            var data = {
+                inquiry: id
+            };
+            $.ajax({
+                type: "POST",
+                url: '{{ path('get_followup') }}',
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    //console.log(response['code'] + " : " + response['message'] + ", debug " + response['debug'] + ", followup " + response['followup']);
+                    //console.log(response['inquiry']);
+                    $('#show-inq-list-all').html("<lablel>No Followups</lablel>");
+                    $('#show-inq-list-call').html("<lablel>No Followup Calls</lablel>");
+                    $('#show-inq-list-sms').html("<lablel>No Followup SMS</lablel>");
+                    $('#show-inq-list-email').html("<lablel>No Followup Emails</lablel>");
+                    $('#show-inq-list-walkin').html("<lablel>No Walk In Followups</lablel>");
+                    fillModalBasic(jQuery.parseJSON(response['inquiry']));
+                    fillModalFollowups(jQuery.parseJSON(response['followup']));
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+
+        }
+
+        function fillModalBasic(inquiry) {
+            // console.log(inquiry);
+            var personName = inquiry['person']['name'];
+            var personNIC = inquiry['person']['nic'];
+            var personProb = inquiry['probability'];
+
+            var personCourse = null;
+            if (inquiry['course'] != null)
+                personCourse = inquiry['course']['code'];
+
+            var personInquiryMode = inquiry['inquiryMode']['name'];
+            var inquiryTime = inquiry['created']['timestamp'];
+            var inquiryID = inquiry['id'];
+            var inquiryStatus = inquiry['inquiryStatus']['name'];
+            var counsellor = inquiry['counsellor']['username'];
+
+            $('#show-inq-title').html(personName);
+            $('#show-inq-counsellor').html("Counsellor: " + counsellor);
+            $('#show-inq-course').html(personCourse);
+            $('#show-inq-date').html("Created on: " + new Date(inquiryTime).toDateString());
+            $('#show-inq-nic').html("NIC: " + personNIC);
+            $('#show-inq-prob').html("Probability: " + personProb);
+
+            $('#show-inq-title').attr('data-id', inquiryID);
+            $('#inquiry_update_status option[value="' + inquiryStatus + '"]').prop('selected', true);
+            $('#show_inquiry_probability option[value="' + personProb + '"]').prop('selected', true);
+        }
+
+        function fillModalFollowups(followup) {
+            //console.log(followup);
+
+            //var followups = followup['inquiry'];
+
+            var list = "";
+
+
+            jQuery.each(followup, function (count, _followup) {
+                var action = _followup['action'];
+                var description = _followup['description'];
+                var counsellor = _followup['concellor']['username'];
+                var followupTime = _followup['timestamp']['timestamp'];
+
+                // set values from inquiry for the modal
+                var curr = "";
+                curr += ' <div class="row"> '
+                        + ' <br> '
+                        + '<div class="col-md-1 col-lg-1">'
+                        + '<img class="img-circle img-sm" src="http://acvo.org.uk/wp-content/uploads/2014/12/blank-profile-300x300.png" alt="User Image">'
+                        + '</div>'
+                        + '<div class="col-md-9 col-lg-9">'
+                        + '<div class="box-comment">'
+                        + '<div class="product-info">'
+                        + '<div class="product-title">'
+                        + counsellor
+                        + '<span class="label label-info pull-right">'
+                        + action
+                        + '</span>'
+                        + '</div>'
+                        + '<span class="product-description">'
+                        + description
+                        + '</span>'
+                        + '</div></div></div>'
+                        + '<div class="col-md-2 col-lg-2">'
+                        + '<span class="text-muted pull-right">'
+                        + new Date(followupTime).toDateString()
+                        + '</span>'
+                        + '<br>'
+                        + '</div></div>';
+
+                list += curr;
+
+                if (action == "Call") {
+                    $(curr).appendTo("#show-inq-list-call");
+                } else if (action == "SMS") {
+                    $(curr).appendTo("#show-inq-list-sms");
+                } else if (action == "Email") {
+                    $(curr).appendTo("#show-inq-list-email");
+                } else if (action == "Walk In") {
+                    $(curr).appendTo("#show-inq-list-walkin");
+                }
+            });
+            $('#show-inq-list-all').html(list);
+            $('#pop_modal').click();
+        }
+    </script>
+
+
+    <!-- Testing send email functionality -->
+    <script>
+        function sendMail() {
+            var email = $('#followup-email-to').val();
+            var subject = $('#followup-email-subject').val();
+            var body = $('#followup-email-body').val();
+
+            //should set to email here or in back end script
+            var data = {subject: subject, body: body, email: email};
+
+            console.log(data);
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('send_email') }}',
+                data: data,
+                dataType: "JSON",
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + " debug :" + response['debug']);
+
+                    //close modal
+                    $('#modal-close-span').click();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        }
+    </script>
+
+{% endblock %}

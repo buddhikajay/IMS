@@ -1,0 +1,88 @@
+AppBundle\Entity\Person:
+    type: entity
+    table: null
+    repositoryClass: AppBundle\Repository\PersonRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    indexes:
+        nic_idx:
+            columns: [nic]
+    fields:
+        nic:
+            type: string
+            length: '10'
+            nullable: true
+        name:
+            type: string
+            length: 255
+        telephone:
+            type: string
+            length: '10'
+            nullable: true
+        email:
+            type: string
+            length: 255
+            nullable: true
+        street1:
+            type: text
+            nullable: true
+        street2:
+            type: text
+            nullable: true
+        city:
+            type: string
+            length: 255
+            nullable: true
+        district:
+            type: string
+            length: 255
+            nullable: true
+        school:
+            type: string
+            length: 255
+            nullable: true
+        district:
+            type: string
+            length: '100'
+            nullable: true
+        description:
+            type: text
+            nullable: true
+        olEnglish:
+            type: string
+            length: '1'
+            nullable: true
+            column: ol_english
+        olMaths:
+            type: string
+            length: '1'
+            nullable: true
+            column: ol_maths
+        language:
+            type: string
+            length: '20'
+            nullable: true
+        alGrades:
+            type: json_array
+            nullable: true
+            column: al_grades
+        dob:
+            type: date
+            nullable: true
+        availableTime:
+            type: datetime
+            nullable: true
+            column: available_time
+        eduQualification:
+            type: text
+            nullable: true
+            column: edu_qualification
+        workExperience:
+            type: text
+            nullable: true
+            column: work_experience
+    lifecycleCallbacks: {  }

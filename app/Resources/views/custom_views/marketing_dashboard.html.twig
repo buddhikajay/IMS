@@ -1,0 +1,204 @@
+{% extends 'base.html.twig' %}
+{% block title %}Dashboard{% endblock %}
+{% block body %}
+    <section class="content-header">
+        <h1>Marketing Dashboard </h1>
+    </section>
+
+    <section class="content">
+        <div class="row">
+            <!-- Overview panel start-->
+            <div class="col-md-4 col-lg-4">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Overview</h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                        class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i
+                                        class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <ul class="products-list product-list-in-box">
+
+                            <!-- /.item -->
+                            <li class="item">
+                                <span>Pending</span>
+
+                                <small class="label pull-right bg-red">{{ pendingInquiriesNumber }}</small>
+                            </li>
+                            <!-- /.item -->
+                            <li class="item">
+                                <span>Following</span>
+
+                                <small class="label pull-right bg-yellow">{{ followingInquiriesNumber }}</small>
+                            </li>
+                            <!-- /.item -->
+                            <li class="item">
+                                <span>Complete</span>
+
+                                <small class="label pull-right bg-green">{{ completeInquiriesNumber }}</small>
+                            </li>
+                            <!-- /.item -->
+                            <li class="item">
+                                <span>Target</span>
+
+                                <small class="label pull-right bg-blue">{{ achieved }}/{{ currentTarget }}</small>
+                            </li>
+                            <!-- /.item -->
+                        </ul>
+                    </div>
+                    <!-- /.box-body -->
+
+                </div>
+            </div>
+            <!-- Overview panel end-->
+
+            <!-- Target Panel : Start -->
+            <div class="col-md-4 col-lg-4">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Active Targets</h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                        class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i
+                                        class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <ul class="products-list product-list-in-box">
+                            {% for target in targets %}
+                                <li class="item">
+                                    <span><label>Target: </label> {{ target.amount }}</span>
+
+                                    <span class="label pull-right bg-blue">
+                                        Deadline {{ target.endDate.format('d/m/Y') }}</span>
+                                    <br>
+                                    <span>Assigned by: {{ target.assigner.username }}</span>
+                                    <small class="label pull-right bg-gray-active">
+                                        Started {{ target.startDate.format('d/m/Y') }}</small>
+
+                                </li>
+                            {% else %}
+                                <li class="item">
+                                    <span>No Targets Assigned to you</span>
+
+                                </li>
+                                <!-- /.item -->
+                            {% endfor %}
+
+                        </ul>
+                    </div>
+                    <!-- /.box-body -->
+
+                </div>
+            </div>
+            <!-- Target Panel : End -->
+
+            <!-- Day summary panel start-->
+            <div class="col-md-4 col-lg-4">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Summary</h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                        class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i
+                                        class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <ul class="products-list product-list-in-box">
+                            {% for course in coursesSummery %}
+                                <li class="item">
+                                    <span>{{ course.name }}</span>
+                                    <small class="label pull-right bg-green">{{ course.count }}</small>
+                                </li>
+                            {% endfor %}
+
+                        </ul>
+                    </div>
+                    <!-- /.box-body -->
+
+                </div>
+            </div>
+            <!-- Day summary panel end-->
+        </div>
+        <!-- end of row 1 -->
+
+        <div class="row">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Overall Inquiry Summery for Last Week</h3>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                    class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i
+                                    class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="chart">
+                        <canvas id="weeklyPerformance"></canvas>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+
+            </div>
+        </div>
+        <!-- End of Row 2-->
+    </section>
+
+    <!-- Graph JS scripts-->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.bundle.min.js"></script>
+
+    <!-- Weekly Performance Graph -->
+    <script>
+        var ctx = document.getElementById("weeklyPerformance");
+        var today = new Date();
+        console.log(today.getDate());
+        console.log('{{ weekSummery|json_encode|raw }}');
+        var days = JSON.parse('{{ weekSummery.days|json_encode|raw }}');
+        var count = JSON.parse('{{ weekSummery.count|json_encode|raw }}');
+
+        console.log(days);
+        console.log(count);
+        var weeklyPerformance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: days,
+                datasets: [{
+                    label: 'Weekly Completion',
+                    data: count,
+                    lineTension: 0
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+
+{% endblock %}

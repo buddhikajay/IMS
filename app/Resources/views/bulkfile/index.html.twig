@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>BulkFile list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Filepath</th>
+                <th>Columnmapping</th>
+                <th>Timestamp</th>
+                <th>Complete</th>
+                <th>Headers</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for bulkFile in bulkFiles %}
+            <tr>
+                <td><a href="{{ path('bulkfile_show', { 'id': bulkFile.id }) }}">{{ bulkFile.id }}</a></td>
+                <td>{{ bulkFile.name }}</td>
+                <td>{{ bulkFile.filePath }}</td>
+                <td>{{ bulkFile.columnMapping }}</td>
+                <td>{% if bulkFile.timestamp %}{{ bulkFile.timestamp|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if bulkFile.complete %}Yes{% else %}No{% endif %}</td>
+                <td>{% if bulkFile.headers %}Yes{% else %}No{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('bulkfile_show', { 'id': bulkFile.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('bulkfile_edit', { 'id': bulkFile.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('bulkfile_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}

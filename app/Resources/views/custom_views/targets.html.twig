@@ -1,0 +1,185 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <section class="content-header">
+        <h1>Targets Dashboard</h1>
+    </section>
+
+    <section class="content">
+        <div class="row">
+            <!-- Overview panel start-->
+            <div class="col-md-4 col-lg-4">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h4>Counselors</h4>
+                    </div>
+                    <div class="box-body">
+                        <ul class="products-list product-list-in-box">
+                            {% for user in users %}
+                                <li class="item">
+                                    <div class="product-img">
+                                        <img src="http://acvo.org.uk/wp-content/uploads/2014/12/blank-profile-300x300.png"
+                                             class="img-circle" alt="User Image">
+                                    </div>
+                                    <div class="product-info">
+                                        <div class="product-title">
+                                            {{ user.username }}
+                                        </div>
+                                        <div class="product-description">
+                                            <div class="pull-right btn-box-tool">
+                                                Inquiries:
+                                                <div class="label label-success" data-toggle="tooltip"
+                                                     title="Conversions">
+                                                    20
+                                                </div>
+                                                <div class="label label-warning" data-toggle="tooltip" title="Pending">
+                                                    8
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% else %}
+                                <label>No Registered Counselors</label>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- Overview panel end-->
+
+            <!-- Target Panel : Start -->
+            <div class="col-md-8 col-lg-8">
+                <div class="row">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h4>Set Target</h4>
+                        </div>
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <ul class="products-list product-list-in-box">
+                                        <li class="item">
+                                            <div class="product-img">
+                                                <img src="http://acvo.org.uk/wp-content/uploads/2014/12/blank-profile-300x300.png"
+                                                     class="img-circle" alt="User Image">
+                                            </div>
+                                            <div class="product-info">
+                                                <div class="col-md-3 col-lg-3">
+                                                    <select class="form-control select2 select2-hidden-accessible"
+                                                            id="new_target_name"
+                                                            style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                                        {% for user in users %}
+                                                            <option data-user="{{ user.email }}">{{ user.username }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-3 col-lg-3">
+                                                    <input type="date" class="form-control pull-right"
+                                                           id="new_target_start"
+                                                           placeholder="Start">
+                                                </div>
+                                                <div class="col-md-3 col-lg-3">
+                                                    <input type="date" class="form-control pull-right"
+                                                           id="new_target_end"
+                                                           placeholder="End">
+                                                </div>
+                                                <div class="col-md-3 col-lg-3">
+                                                    <input class="form-control" id="new_target_value" type="number"
+                                                           placeholder="Target">
+                                                </div>
+
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <button type="button" id="new_target" class="btn btn-default pull-right"
+                                    data-dismiss="modal">Set New Target
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h4>Current Targets</h4>
+                        </div>
+                        <div class="box-body">
+                            <table class="table table-bordered">
+                                <tbody>
+                                <tr>
+                                    <td>Counselor</td>
+                                    <td>Target</td>
+                                    <td>Target Deadline</td>
+                                </tr>
+
+                                {% for target in targets %}
+                                    <tr>
+                                        <td>{{ target.councellor.username }}</td>
+                                        <td>{{ target.amount }}</td>
+                                        <td>{{ target.endDate.format("d/m/Y") }}</td>
+
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="3">No targets set yet</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Target Panel : End -->
+        </div>
+        <!-- end of row 1 -->
+
+    </section>
+    {% javascripts  '@AppBundle/Resources/public/js/jquery-2.2.3.min.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <!-- new shoutout -->
+    <script>
+        $('#new_target').click(function () {
+            var name = $('#new_target_name option:selected').attr('data-user');
+            var start_date = $('#new_target_start').val();
+            var end_date = $('#new_target_end').val();
+            var value = $('#new_target_value').val();
+
+            var data = {
+                name: name,
+                start_date: start_date,
+                end_date: end_date,
+                value: value
+            };
+
+            console.log(data);
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('targets_new') }}',
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + " debug :" + response['debug']);
+                    inject_html(data);
+                    location.reload();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        });
+
+        function inject_html(data) {
+            //@todo inject new html element
+        }
+    </script>
+
+
+{% endblock %}

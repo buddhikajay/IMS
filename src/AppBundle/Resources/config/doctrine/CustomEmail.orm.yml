@@ -1,0 +1,28 @@
+AppBundle\Entity\CustomEmail:
+    type: entity
+    table: null
+    repositoryClass: AppBundle\Repository\CustomEmailRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        title:
+            type: string
+            length: '255'
+            unique: false
+            nullable: false
+
+        name:
+            type: string
+            length: '255'
+            unique: false
+            nullable: false
+
+        body:
+            type: text
+            unique: false
+            nullable: true
+    lifecycleCallbacks: {  }

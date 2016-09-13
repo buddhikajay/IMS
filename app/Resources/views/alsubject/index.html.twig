@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>ALSubject list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for aLSubject in aLSubjects %}
+            <tr>
+                <td><a href="{{ path('alsubject_show', { 'id': aLSubject.id }) }}">{{ aLSubject.id }}</a></td>
+                <td>{{ aLSubject.code }}</td>
+                <td>{{ aLSubject.name }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('alsubject_show', { 'id': aLSubject.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('alsubject_edit', { 'id': aLSubject.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('alsubject_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}

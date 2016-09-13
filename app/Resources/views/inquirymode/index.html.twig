@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>InquiryMode list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for inquiryMode in inquiryModes %}
+            <tr>
+                <td><a href="{{ path('inquirymode_show', { 'id': inquiryMode.id }) }}">{{ inquiryMode.id }}</a></td>
+                <td>{{ inquiryMode.code }}</td>
+                <td>{{ inquiryMode.name }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('inquirymode_show', { 'id': inquiryMode.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('inquirymode_edit', { 'id': inquiryMode.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('inquirymode_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}

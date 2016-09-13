@@ -1,0 +1,212 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <section class="content-header">
+        <h1>Profile<span class="pull-right"></span></h1>
+
+    </section>
+    <section class="content">
+        <div class="col-md-3">
+
+            <!-- Profile Image -->
+            <div class="box box-primary">
+                <div class="box-body box-profile">
+
+
+                    <img src="{{ profile.profilePic|length >2 ? '../uploads/pic/'~ profile.profilePic : '../uploads/pic/default.jpg' }}"
+                         alt="Example" class="profile-user-img img-responsive img-circle"/>
+
+                    <h3 id="name"
+                        class="profile-username text-center">{{ profile.firstName }} {{ profile.lastName }}</h3>
+
+                    <p id="contact" class="text-muted text-center">{{ profile.contact }}</p>
+
+
+                    <a href="#" class="btn btn-primary btn-block" data-toggle="modal" data-target="#edit_profile"><b>Edit</b></a>
+                    <a href="#" class="btn btn-danger btn-block" data-toggle="modal" data-target="#change_password"><b>Change
+                            Password</b></a>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+
+
+        </div>
+    </section>
+
+    <!-- modals--->
+    <!-- Edit Profile MOdal -->
+    <div class="modal fade" id="edit_profile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Edit Profile Information</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input class="form-control" id="modal_edit_first_name" type="text"
+                                   placeholder="First Name" value="{{ profile.firstName }}">
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input id="modal_edit_last_name" class="form-control" type="text"
+                                   placeholder="Last Name" value="{{ profile.lastName }}">
+                        </div>
+                        <div class="form-group">
+                            <label>Contact Number</label>
+                            <input class="form-control" id="modal_edit_contact" type="text"
+                                   placeholder="Contact" value="{{ profile.contact }}">
+                        </div>
+                        <div class="form-group">
+                            <label>Profile Picture</label>
+                            <input type="file" id="modal_edit_profile_pic" accept="image/jpeg">
+
+                            <p class="help-block">select your profile picture</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="edit_profile_close" class="btn btn-default" data-dismiss="modal">Close
+                    </button>
+                    <button type="button" id="profile_submit" class="btn btn-primary" onclick="updateInfo()">Save
+                        Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal-->
+    <div class="modal fade" id="change_password" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Change Password</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label>Current Password</label>
+                            <input class="form-control" id="modal_changepass_old" type="password">
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label>New Password</label>
+                                <input class="form-control" id="modal_changepass_new" type="password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label>Confirm Password</label>
+                                <input class="form-control" id="modal_changepass_confirm" type="password">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="changepass_close" class="btn btn-default" data-dismiss="modal">Close
+                    </button>
+                    <button type="button" id="changepass_submit" class="btn btn-primary">Change Password</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% javascripts  '@AppBundle/Resources/public/js/jquery-2.2.3.min.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <!-- File Upload Script-->
+
+    <script>
+        function updateInfo() {
+            if ($('#modal_edit_profile_pic').get(0).files.length > 0) {
+                uploadFile(true);
+
+            } else {
+                uploadFile(false);
+            }
+        }
+        function uploadFile(updatePic) {
+
+            var file = $('#modal_edit_profile_pic')[0].files[0];
+            var first_name = $('#modal_edit_first_name').val();
+            var last_name = $('#modal_edit_last_name').val();
+            var contact = $('#modal_edit_contact').val();
+
+            var formData = new FormData();
+            if (updatePic) {
+                formData.append('file', file);
+            }
+            formData.append('first_name', first_name);
+            formData.append('last_name', last_name);
+            formData.append('contact', contact);
+
+            var data = {first_name: first_name, last_name: last_name, contact: contact};
+            $.ajax({
+                type: 'POST',
+                url: '{{ path('update_profile') }}',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + ' , debug : ' + response['debug']);
+                    $('#edit_profile_close').click();
+                    updateHTML(data);
+                    //refresh the browser
+                    location.reload();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    // Handle errors here
+                    console.log('upload files ERRORS: ' + textStatus + " : " + errorThrown);
+
+                },
+                complete: function () {
+                    // STOP LOADING SPINNER
+                }
+            });
+
+        }
+
+        function updateHTML(data) {
+            $('#name').html(data['first_name'] + " " + data['last_name']);
+            $('#contact').html(data['contact']);
+        }
+    </script>
+
+    <!-- change password script -->
+    <script>
+        $('#changepass_submit').click(function () {
+            var current = $('#modal_changepass_old').val();
+            var newpass = $('#modal_changepass_new').val();
+            var confirm = $('#modal_changepass_confirm').val();
+
+            var data = {current:current,newpass:newpass};
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ path('edit_password') }}',
+                data: data,
+                dataType: 'JSON',
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + " debug :" + response['debug']);
+                    inject_html(data);
+                    $('#changepass_close').click();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+
+        });
+    </script>
+
+{% endblock %}
+

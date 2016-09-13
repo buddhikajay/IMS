@@ -1,0 +1,232 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <section class="content-header">
+        <h1>Inquiry Management </h1>
+    </section>
+
+    <section class="content">
+        <div class="box-body">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#bulk"><i
+                                class="fa fa-folder-open text-green fa-lg"></i> Unassigned Bulk Uploads &nbsp; <span
+                                class="label label-warning pull-right">{{ unassignedBulkNumber[0]['unassigned_number'] }}</span></a>
+                </li>
+                <li><a data-toggle="tab" href="#inquiry"><i
+                                class="fa fa-book text-green fa-lg"></i> Unassigned Inquiries &nbsp; <span
+                                class="label label-warning pull-right">{{ unassignedInquiriesNumber[0]['unassigned_number'] }}</span></a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="bulk" class="tab-pane fade in active">
+                    <div class="box no-border col-md-12 col-lg-12">
+                        <div class="box-body">
+                            <br>
+                            <div class="row">
+                                <label>Total un-assigned:
+                                    &nbsp; </label> {{ unassignedBulkNumber[0]['unassigned_number'] }}
+                            </div>
+                            <br>
+                            <div class="row">
+                                <label>Assign: </label>
+                                <input type="number" class="form-control" placeholder="Amount" id="bulk_assign_number"
+                                       max="{{ unassignedBulkNumber[0]['unassigned_number'] }}">
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <button type="button" class="btn btn-default pull-right" data-toggle="modal"
+                                    data-target="#counsellor">Assign
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="inquiry" class="tab-pane fade">
+                    <div class="box no-border col-md-12 col-lg-12">
+                        <div class="box-header">
+                            <label>Assign to: </label>
+                            <button type="button" class="btn btn-default pull-right" data-toggle="modal"
+                                    data-target="#inq_counsellor">Assign
+                            </button>
+                        </div>
+                        <div class="box-body with-border">
+                            <div class="controls span2">
+                                {% for unassignedInquiry in unassignedInquiries %}
+                                    <div class="box-body">
+                                        <label class="checkbox">
+                                            <input type="checkbox" value="yes" id="assignCheck"
+                                                   name="{{ unassignedInquiry.id }}">
+                                            <ul class="products-list product-list-in-box">
+                                                <li class="item">
+                                                    <a>
+                                                        <div class="product-info">
+                                                            <div class="product-title">{{ unassignedInquiry.person.name }}
+                                                                <span class="label label-default pull-right">{{ unassignedInquiry.course.code }}</span>
+                                                            </div>
+                                                        <span class="product-description">
+                                                            2016-10-12
+                                                            <label>{{ unassignedInquiry.counsellor.username }}</label>
+                                                            <span class="label label-info pull-right">{{ unassignedInquiry.created.format('y/m/d') }}</span>
+                                                        </span>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </label>
+                                    </div>
+                                {% else %}
+                                    <label>No unassigned inquiries left</label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- bulk assign modal -->
+    <div class="modal" id="counsellor">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4>Assign 1000 to,</h4>
+                </div>
+                <div class="modal-body">
+                    <select class="form-control select2 select2-hidden-accessible"
+                            id="bulk_assign_counselor"
+                            style="width: 100%;" tabindex="-1" aria-hidden="true">
+                        {% for counselor in counsellors %}
+                            <option data-code="{{ counselor.username }}">{{ counselor.username }}</option>
+                        {% else %}
+                            <option disabled="disabled">No Counselors Contact System Admin</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="counsellor_submit" class="btn btn-success pull-right" onclick="bulkAssign()"
+                            data-dismiss="modal">Assign
+                    </button>
+                    <button type="button" id="counsellor_cancel" class="btn btn-default pull-right"
+                            data-dismiss="modal">Cancel
+                    </button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <!-- inquiry assign modal -->
+    <div class="modal" id="inq_counsellor">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4>Assign selected inquiries to,</h4>
+                </div>
+                <div class="modal-body">
+                    <select class="form-control select2 select2-hidden-accessible"
+                            id="assign_counselor"
+                            style="width: 100%;" tabindex="-1" aria-hidden="true">
+                        {% for counselor in counsellors %}
+                            <option data-code="{{ counselor.username }}">{{ counselor.username }}</option>
+                        {% else %}
+                            <option disabled="disabled">No Counselors Contact System Admin</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="counsellor_submit" class="btn btn-success pull-right"
+                            onclick="assignThese()"
+                            data-dismiss="modal">Assign
+                    </button>
+                    <button type="button" id="counsellor_cancel" class="btn btn-default pull-right"
+                            data-dismiss="modal">Cancel
+                    </button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    {% javascripts  '@AppBundle/Resources/public/js/jquery-2.2.3.min.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {% javascripts  '@AppBundle/Resources/public/js/bootstrap.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script>
+        function bulkAssign(){
+            var counselor = $('#bulk_assign_counselor option:selected').text();
+            var amount = $('#bulk_assign_number').val();
+
+            var data = {
+                amount: amount,
+                counselor: counselor
+            };
+            console.log(data);
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('assign_bulk') }}',
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + ", debug " + response['debug']);
+                    location.reload();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        }
+
+        function assignThese() {
+            console.log("clicked Assign")
+            var selected = [];
+
+            $('input:checked').each(function () {
+                selected.push($(this).attr("name"));
+            });
+
+            var counselor = $('#assign_counselor option:selected').text();
+
+            console.log(counselor);
+            console.log(selected);
+
+            var data = {
+                selected: selected,
+                counselor: counselor
+            };
+            console.log(data);
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('assign_inquiry') }}',
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + ", debug " + response['debug']);
+                    location.reload();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+
+        }
+    </script>
+
+{% endblock %}
+
+

@@ -1,0 +1,19 @@
+AppBundle\Entity\ALSubject:
+    type: entity
+    table: null
+    repositoryClass: AppBundle\Repository\ALSubjectRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        code:
+            type: string
+            length: '5'
+            unique: true
+        name:
+            type: string
+            length: '80'
+    lifecycleCallbacks: {  }

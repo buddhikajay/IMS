@@ -1,0 +1,385 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <section class="content-header">
+        <h1>ShoutOut Dashboard</h1>
+    </section>
+
+    <section class="content">
+        <div class="row">
+            <!-- Overview panel start-->
+            <div class="col-md-7 col-lg-7">
+                <div class="row">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Select Contacts to ShoutOut</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-md-3 col-lg-3">
+                                    <label>Campaign Name:</label>
+                                </div>
+                                <div class="col-md-9 col-lg-9">
+                                    <input type="text" id="shoutout_name" class="form-control" placeholder="Name">
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-4 col-lg-4">
+                                    <label>Type</label>
+                                </div>
+                                <div class="col-md-4 col-lg-4">
+                                    <label>Course</label>
+                                </div>
+                                <div class="col-md-4 col-lg-4">
+                                    <label>Inquiry Date</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 col-lg-4">
+                                    <select class="form-control select2 select2-hidden-accessible"
+                                            id="shoutout_inquiryMode"
+                                            style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                        <option selected="selected" data-code="*">Any</option>
+                                        {% for inquiryMode in inquiryModes %}
+                                            <option data-code="{{ inquiryMode.code }}">{{ inquiryMode.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-4 col-lg-4">
+                                    <select class="form-control select2 select2-hidden-accessible"
+                                            id="shoutout_course"
+                                            style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                        <option selected="selected" data-code="*">Any</option>
+                                        {% for course in courses %}
+                                            <option data-code="{{ course.code }}">{{ course.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-4 col-lg-4">
+                                    <input type="date" class="form-control" id="shoutout_date"
+                                           placeholder="Date">
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-6 col-lg-6">
+                                    <label>Inquiry Status</label>
+                                </div>
+                                <div class="col-md-6 col-lg-6">
+                                    <label>Total Number of ShoutOuts</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-lg-6">
+                                    <select class="form-control select2 select2-hidden-accessible"
+                                            id="shoutout_inquiryStatus"
+                                            style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                        <option selected="selected" data-code="*">Any</option>
+                                        {% for inquiryStatus in inquiryStatuses %}
+                                            <option data-code="{{ inquiryStatus.code }}">{{ inquiryStatus.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-6 col-lg-6">
+                                    <button type="button" class="pull-right btn btn-default"
+                                            id="evaluateNumber">Evaluate Number
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="box-footer">
+                            <div class="pull-right">
+                                <label class="label-success" id="shoutout_number_eval"> &nbsp;0&nbsp;</label>
+                            </div>
+                            <div class="pull-right">
+                                <label>Selected Contacts:</label>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- shoutout log -->
+                <div class="row">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">ShoutOut Log</h3>
+                        </div>
+                        <div class="box-body">
+                            <ul class="products-list product-list-in-box">
+                                {% for shoutout in shoutoutLog %}
+                                    <li class="item">
+                                        <div class="product-info">
+                                            <div class="product-title">{{ shoutout.name }}
+                                                <span class="label label-default">{{ shoutout.action }}</span>
+                                            </div>
+                                            <span class="product-description">
+                                                {{ shoutout.timestamp.format("d/m/Y") }}
+                                                <span class="label label-info pull-right"
+                                                      title="Total Sent">{{ shoutout.sentCount }}</span>
+                                                <span class="label label-warning pull-right"
+                                                      title="Total Delivered">{{ shoutout.deliveredCount }}</span>
+                                            </span>
+                                        </div>
+                                    </li>
+                                {% else %}
+                                    <li class="item">
+                                        <div class="product-info">
+                                            <div class="product-title">No Shoutouts Found</div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overview panel end-->
+
+            <!-- Message panel : Start -->
+            <div class="col-md-5 col-lg-5">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">ShoutOut</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="box-body">
+                            <ul class="nav nav-tabs">
+
+                                <li class="active"><a data-toggle="tab" href="#sms"><i
+                                                class="fa fa-mobile-phone text-green fa-lg"></i></a></li>
+                                <li><a data-toggle="tab" href="#email"><i
+                                                class="fa fa-envelope text-green fa-lg"></i></a></li>
+                            </ul>
+
+                            <div class="tab-content">
+                                <div id="sms" class="tab-pane fade in active">
+                                    <br>
+                                    <div class="row">
+                                        <label>Text Message</label>
+                                        <span class="text-muted pull-right">8:03 PM</span>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                                    <textarea class="form-control" rows="5"
+                                                              id="shoutout_sms_body"
+                                                              placeholder="Text message body"></textarea>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-md-6 col-lg-6">
+                                            <input type="number" class="form-control" placeholder="SMS number"
+                                                   id="shoutout_sms_number">
+
+                                        </div>
+                                        <div class="col-md-6 col-lg-6">
+                                            <button type="button" class="pull-right btn btn-success"
+                                                    id="sendSMS">Send SMS
+                                                <i class="fa fa-arrow-circle-right"></i></button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div id="email" class="tab-pane fade">
+                                    <br>
+                                    <div class="row">
+                                        <label>Send Email</label>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <form action="#" method="post">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" name="subject"
+                                                       id="shoutout_email_subject"
+                                                       placeholder="Subject">
+                                            </div>
+                                            <div>
+                                                <textarea class="form-control" rows="5"
+                                                          id="shoutout_email_body"
+                                                          placeholder="Email message body"></textarea>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <button type="button" class="pull-right btn btn-success"
+                                                id="sendEmail" onclick="sendMail()">Send
+                                            <i class="fa fa-arrow-circle-right"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- /.box-body -->
+
+                </div>
+            </div>
+            <!-- Target Panel : End -->
+        </div>
+        <!-- end of row 1 -->
+
+    </section>
+
+    {% javascripts  '@AppBundle/Resources/public/js/jquery-2.2.3.min.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <!-- evaluate number -->
+    <script>
+        $('#evaluateNumber').click(function () {
+            var type = $('#shoutout_inquiryMode option:selected').attr('data-code');
+            var course = $('#shoutout_course option:selected').attr('data-code');
+            var date = $('#shoutout_date').text();
+            var status = $('#shoutout_inquiryStatus option:selected').attr('data-code');
+
+            var data = {
+                type: type,
+                course: course,
+                date: date,
+                status: status
+            }
+
+            console.log(data);
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('shoutout_evaluate') }}',
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    //console.log(response['code'] + " : " + response['message'] + " debug :" + response['debug']);
+                    console.log(response['value']);
+
+                    $('#shoutout_number_eval').html("&nbsp;" + response['value'] + "&nbsp;");
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+
+
+        });
+    </script>
+
+    <!-- new shoutout -->
+    <script>
+        $('#sendSMS').click(function () {
+            var name = $('#shoutout_name').val();
+            var inquiryType = $("#shoutout_inquiryMode option:selected").attr('data-code');
+            var course = $('#shoutout_course option:selected').attr('data-code');
+            var inquiryDate = $('#shoutout_date').val();
+            var inquiryStatus = $('#shoutout_inquiryStatus option:selected').attr('data-code');
+            var number = $('#shoutout_number').val();
+            var smsBody = $('#shoutout_sms_body').val();
+
+
+            var data = {
+                type: 'SMS',
+                name: name,
+                inquiryType: inquiryType,
+                course: course,
+                inquiryDate: inquiryDate,
+                inquiryStatus: inquiryStatus,
+                number: number,
+                smsBody: smsBody
+            };
+
+            console.log(data);
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('shoutout_new') }}',
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + " debug :" + response['debug']);
+                    console.log(response['emails']);
+                    location.reload();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        });
+
+        $('#sendEmail').click(function () {
+            var name = $('#shoutout_name').val();
+            var inquiryType = $("#shoutout_inquiryMode option:selected").attr('data-code');
+            var course = $('#shoutout_course option:selected').attr('data-code');
+            var inquiryDate = $('#shoutout_date').val();
+            var inquiryStatus = $('#shoutout_inquiryStatus option:selected').attr('data-code');
+            var number = $('#shoutout_sms_number').val();
+            var emailBody = $('#shoutout_email_body').val();
+            var emailSubject = $('#shoutout_email_subject').val();
+
+            var data = {
+                type: 'Email',
+                name: name,
+                inquiryType: inquiryType,
+                course: course,
+                inquiryDate: inquiryDate,
+                inquiryStatus: inquiryStatus,
+                number: number,
+                emailBody: emailBody,
+                emailSubject: emailSubject
+            };
+
+            console.log(data);
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('shoutout_new') }}',
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log("send email: " + response['code'] + " : " + response['message'] + " debug :" + response['debug']);
+                    console.log(response['emails']);
+                    location.reload();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        });
+
+
+        function inject_html(data) {
+            //@todo inject new html element
+        }
+    </script>
+
+
+    <!-- Testing send email functionality -->
+    <script>
+        function sendMail() {
+            var subject = $('#shoutout_email_subject').val();
+            var body = $('#shoutout_email_body').val();
+
+            //should set to email here or in back end script
+            data = {subject: subject, body: body, email: 'nuwan.ras@gmail.com'};
+
+            console.log(data);
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('send_email') }}',
+                data: data,
+                dataType: "JSON",
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + " debug :" + response['debug']);
+                    inject_html(data);
+                    $('#new_IS_close').click();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        }
+    </script>
+{% endblock %}

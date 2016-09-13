@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>CustomEmail</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ customEmail.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ customEmail.title }}</td>
+            </tr>
+            <tr>
+                <th>Body</th>
+                <td>{{ customEmail.body }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('customemail_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('customemail_edit', { 'id': customEmail.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

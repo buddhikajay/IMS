@@ -1,0 +1,31 @@
+AppBundle\Entity\Target:
+    type: entity
+    table: null
+    repositoryClass: AppBundle\Repository\TargetRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        timestamp:
+            type: datetime
+        startDate:
+            type: datetime
+        endDate:
+            type: datetime
+        amount:
+            type: integer
+    manyToOne:
+        councellor:
+            targetEntity: User
+            joinColumn:
+                name: councellor
+                referencedColumnName: id
+        assigner:
+            targetEntity: User
+            joinColumn:
+                name: assigner
+                referencedColumnName: id
+    lifecycleCallbacks: {  }

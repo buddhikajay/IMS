@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Inquiry</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ inquiry.id }}</td>
+            </tr>
+            <tr>
+                <th>Year</th>
+                <td>{{ inquiry.year }}</td>
+            </tr>
+            <tr>
+                <th>Semester</th>
+                <td>{{ inquiry.semester }}</td>
+            </tr>
+            <tr>
+                <th>Probability</th>
+                <td>{{ inquiry.probability }}</td>
+            </tr>
+            <tr>
+                <th>Lastmodified</th>
+                <td>{% if inquiry.lastModified %}{{ inquiry.lastModified|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Created</th>
+                <td>{% if inquiry.created %}{{ inquiry.created|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('inquiry_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('inquiry_edit', { 'id': inquiry.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

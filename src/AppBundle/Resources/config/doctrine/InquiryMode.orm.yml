@@ -1,0 +1,19 @@
+AppBundle\Entity\InquiryMode:
+    type: entity
+    table: null
+    repositoryClass: AppBundle\Repository\InquiryModeRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        code:
+            type: string
+            length: '8'
+            unique: true
+        name:
+            type: string
+            length: '100'
+    lifecycleCallbacks: {  }

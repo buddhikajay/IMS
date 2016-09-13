@@ -1,0 +1,52 @@
+AppBundle\Entity\Inquiry:
+    type: entity
+    table: null
+    repositoryClass: AppBundle\Repository\InquiryRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        year:
+            type: integer
+            nullable: true
+        semester:
+            type: integer
+            nullable: true
+        probability:
+            type: integer
+        lastModified:
+            type: datetime
+            column: last_modified
+        created:
+            type: datetime
+    manyToOne:
+          person:
+              targetEntity: Person
+              inversedBy: inquiries
+              joinColumn:
+                  name: person
+                  referencedColumnName: id
+          course:
+              targetEntity: Course
+              joinColumn:
+                  name: course
+                  referencedColumnName: id
+          inquiryMode:
+              targetEntity: InquiryMode
+              joinColumn:
+                  name: inquiry_mode
+                  referencedColumnName: id
+          inquiryStatus:
+              targetEntity: InquiryStatus
+              joinColumn:
+                    name: status
+                    referencedColumnName: id
+          counsellor:
+              targetEntity: User
+              joinColumn:
+                  name: counsellor
+                  referencedColumnName: id
+    lifecycleCallbacks: {  }

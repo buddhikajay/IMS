@@ -1,0 +1,693 @@
+{% extends 'base.html.twig' %}
+{% block title %} Reports {% endblock %}
+{% block body %}
+    <section class="content-header">
+        <h1>Reports</h1>
+    </section>
+
+    <section class="content">
+        <div class="row">
+
+            <div class="col-md-8 col-lg-8">
+                <div class="box box-primary ">
+                    <div class="box-header">
+                        <h4>Company Performance</h4>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                        class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i
+                                        class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <canvas id="CPGCanvas"></canvas>
+                    </div>
+                </div>
+                <!-- End of Company Performance-->
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h4>Sources of Students</h4>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                        class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i
+                                        class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="nav-tabs-custom">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#sos_1" data-toggle="tab"
+                                                      aria-expanded="true">Weekly</a></li>
+                                <li class=""><a href="#sos_2" data-toggle="tab" aria-expanded="false">Monthly</a>
+                                </li>
+                                <li class=""><a href="#sos_3" data-toggle="tab" aria-expanded="false">Annually</a>
+                                </li>
+                                <li class=""><a href="#sos_4" data-toggle="tab" aria-expanded="false">Overall</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="sos_1">
+                                    <canvas id="weekSoSGCanvas"></canvas>
+                                </div>
+                                <!-- /.tab-pane -->
+                                <div class="tab-pane" id="sos_2">
+                                    <canvas id="monthSoSGCanvas"></canvas>
+                                </div>
+                                <!-- /.tab-pane -->
+                                <div class="tab-pane" id="sos_3">
+                                    <canvas id="yearSoSGCanvas"></canvas>
+                                </div>
+                                <!-- /.tab-pane -->
+                                <div class="tab-pane" id="sos_4">
+                                    <canvas id="overallSoSGCanvas"></canvas>
+                                </div>
+                                <!-- /.tab-pane -->
+                            </div>
+                            <!-- /.tab-content -->
+                        </div>
+
+                        <div class="box-body">
+                            <h4>Sources of Students Aggregate over time</h4>
+                            <canvas id="SoSCanvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- End of Sources of Students-->
+
+
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h4>Courses Summary</h4>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                        class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i
+                                        class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="nav-tabs-custom">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#cos_1" data-toggle="tab"
+                                                      aria-expanded="true">Weekly</a></li>
+                                <li class=""><a href="#cos_2" data-toggle="tab" aria-expanded="false">Monthly</a>
+                                </li>
+                                <li class=""><a href="#cos_3" data-toggle="tab" aria-expanded="false">Annually</a>
+                                </li>
+                                <li class=""><a href="#cos_4" data-toggle="tab" aria-expanded="false">Overall</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="cos_1">
+                                    <canvas id="weekCSGCanvas"></canvas>
+                                </div>
+                                <!-- /.tab-pane -->
+                                <div class="tab-pane" id="cos_2">
+                                    <canvas id="monthCSGCanvas"></canvas>
+                                </div>
+                                <!-- /.tab-pane -->
+                                <div class="tab-pane" id="cos_3">
+                                    <canvas id="yearCSGCanvas"></canvas>
+                                </div>
+                                <!-- /.tab-pane -->
+                                <div class="tab-pane" id="cos_4">
+                                    <canvas id="overallCSGCanvas"></canvas>
+                                </div>
+                                <!-- /.tab-pane -->
+                            </div>
+                            <!-- /.tab-content -->
+                        </div>
+
+                        <h4>Inquired Course Aggregate over time</h4>
+                        <canvas id="COSCanvas"></canvas>
+                    </div>
+                </div>
+                <!-- End of course summery -->
+
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h4>Admission Statistics</h4>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                        class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i
+                                        class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        Bar graph of sent admissions / email opened / offer accepted.
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-4">
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h4>Counselor Performance</h4>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                        class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i
+                                        class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="col-md-12 col-lg-12">
+                            <ul class="products-list product-list-in-box">
+                                {% for entry in performance %}
+                                <li class="item">
+                                    <div class="product-img">
+                                        <img src="{{ entry.profilePic|length >2 ? '../uploads/pic/'~ entry.profilePic : '../uploads/pic/default.jpg' }}"
+                                             class="img-circle" alt="User Image">
+                                    </div>
+                                    <div class="product-title">
+                                        {{ entry.name }}
+                                    </div>
+                                    <div class="product-info">
+
+                                    </div>
+                                    <br>
+                                    <div class="product-description">
+                                        <div class="col-md-4 col-lg-4" data-toggle="tooltip"
+                                             title="Pending">
+                                            <label class="label-warning"
+                                                   style="width: 100%; text-align: center">{{ entry.performance.pending }}</label>
+                                        </div>
+                                        <div class="col-md-4 col-lg-4" data-toggle="tooltip"
+                                             title="Following">
+                                            <label class="label-info"
+                                                   style="width: 100%; text-align: center">{{ entry.performance.following }}</label>
+                                        </div>
+                                        <div class="col-md-4 col-lg-4" data-toggle="tooltip"
+                                             title="Complete">
+                                            <label class="label-success"
+                                                   style="width: 100%; text-align: center">{{ entry.performance.complete }}</label>
+                                        </div>
+                                        <div class="progress-group col-md-12 col-lg-12">
+                                            <span class="progress-text">Current Target</span>
+                                            <span class="progress-number"><b>{{ entry.performance.achieved }}</b>/{{ entry.performance.target }}</span>
+                                            <div class="progress sm">
+                                                <div class="progress-bar progress-bar-red" style="width: {{ entry.performance.percentage }}%"></div>
+                                            </div>
+                                        </div>
+                                        <br>
+
+                                        <div class="progress-group col-md-12 col-lg-12">
+                                            <span class="progress-text">Total</span>
+                                            <span class="progress-number"><b>This</b>/Best</span>
+                                            <div class="progress sm">
+                                                <div class="progress-bar progress-bar-red" style="width: 45%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <br>
+        <div class="row">
+
+        </div>
+    </section>
+
+
+    <!-- Chart JS scripts-->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.bundle.min.js"></script>
+
+    <script>
+
+        console.log('Performance : {{ performance|json_encode|raw }}');
+
+    </script>
+
+    <!-- Company Performance Graph -->
+    <script>
+        var dailyNewInquiries = JSON.parse('{{ dailyNewInquiries|json_encode|raw }}');
+        var dailyConversions = JSON.parse('{{ dailyConversion|json_encode|raw }}');
+        var labels = dailyConversions['days'];
+
+        var data = {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Daily New Inquiries',
+                    fillColor: 'rgba(220,220,220,0.2)',
+                    strokeColor: 'rgba(220,220,220,1)',
+                    data: dailyNewInquiries['count'],
+                    lineTension: 0,
+                    spanGaps: true
+                },
+                {
+                    label: 'Daily Conversions',
+                    fillColor: 'rgba(151,187,205,0.2)',
+                    strokeColor: 'rgba(151,187,205,1)',
+                    data: dailyConversions['count'],
+                    lineTension: 0,
+                    spanGaps: true
+
+                }
+            ]
+        };
+        var CPGCanvas = document.getElementById("CPGCanvas");
+        var companyPerformanceGraph = new Chart(CPGCanvas, {
+            type: 'line',
+            data: data
+
+        });
+
+    </script>
+
+    <!-- Source of Student Graph -->
+    <script>
+        /*
+         Weekly
+         */
+        var weeklyInquiryMode = JSON.parse('{{ weeklyInquiryModeDistribution|json_encode|raw }}');
+        var labels = weeklyInquiryMode['mode'];
+        var colors = [];
+        var hoverColors = [];
+        for (label in labels) {
+            var r = Math.floor(Math.random() * 200);
+            var g = Math.floor(Math.random() * 200);
+            var b = Math.floor(Math.random() * 200);
+
+            var color = 'rgba(' + r + ', ' + g + ', ' + b + ',0.7)';
+            var hoverColor = 'rgba(' + r + ', ' + g + ', ' + b + ',.9)';
+            colors.push(color);
+            hoverColors.push(hoverColor);
+        }
+
+        var data = {
+            labels: labels,
+            datasets: [
+                {
+                    data: weeklyInquiryMode['count'],
+                    backgroundColor: colors,
+                    hoverBackgroundColor: hoverColors
+                }
+            ]
+
+        };
+        var weekSoSGCanvas = document.getElementById('weekSoSGCanvas');
+        var weeklySourceOfStudentsGraph = new Chart(weekSoSGCanvas, {
+            type: 'pie',
+            data: data
+
+        });
+
+        /*
+         Monthly
+         */
+        var monthlyInquiryMode = JSON.parse('{{ monthlyInquiryModeDistribution|json_encode|raw }}');
+        labels = monthlyInquiryMode['mode'];
+        colors = [];
+        hoverColors = [];
+        for (label in labels) {
+            r = Math.floor(Math.random() * 200);
+            g = Math.floor(Math.random() * 200);
+            b = Math.floor(Math.random() * 200);
+
+            color = 'rgba(' + r + ', ' + g + ', ' + b + ',0.7)';
+            hoverColor = 'rgba(' + r + ', ' + g + ', ' + b + ',.9)';
+            colors.push(color);
+            hoverColors.push(hoverColor);
+        }
+
+        data = {
+            labels: labels,
+            datasets: [
+                {
+                    data: monthlyInquiryMode['count'],
+                    backgroundColor: colors,
+                    hoverBackgroundColor: hoverColors
+                }
+            ]
+
+        };
+        var monthSoSGCanvas = document.getElementById('monthSoSGCanvas');
+        var monthlySourceOfStudentsGraph = new Chart(monthSoSGCanvas, {
+            type: 'pie',
+            data: data
+
+        });
+
+        /*
+         Annually
+         */
+        var annualyInquiryMode = JSON.parse('{{ annualInquiryModeDistribution|json_encode|raw }}');
+        labels = annualyInquiryMode['mode'];
+        colors = [];
+        hoverColors = [];
+        for (label in labels) {
+            r = Math.floor(Math.random() * 200);
+            g = Math.floor(Math.random() * 200);
+            b = Math.floor(Math.random() * 200);
+
+            color = 'rgba(' + r + ', ' + g + ', ' + b + ',0.7)';
+            hoverColor = 'rgba(' + r + ', ' + g + ', ' + b + ',.9)';
+            colors.push(color);
+            hoverColors.push(hoverColor);
+        }
+
+        data = {
+            labels: labels,
+            datasets: [
+                {
+                    data: annualyInquiryMode['count'],
+                    backgroundColor: colors,
+                    hoverBackgroundColor: hoverColors
+                }
+            ]
+
+        };
+        var yearSoSGCanvas = document.getElementById('yearSoSGCanvas');
+        var annuallySourceOfStudentsGraph = new Chart(yearSoSGCanvas, {
+            type: 'pie',
+            data: data
+
+        });
+        /*
+         Overall
+         */
+        var overallInquiryMode = JSON.parse('{{ overallInquiryModeDistribution|json_encode|raw }}');
+        labels = overallInquiryMode['mode'];
+        colors = [];
+        hoverColors = [];
+        for (label in labels) {
+            r = Math.floor(Math.random() * 200);
+            g = Math.floor(Math.random() * 200);
+            b = Math.floor(Math.random() * 200);
+
+            color = 'rgba(' + r + ', ' + g + ', ' + b + ',0.7)';
+            hoverColor = 'rgba(' + r + ', ' + g + ', ' + b + ',.9)';
+            colors.push(color);
+            hoverColors.push(hoverColor);
+        }
+        data = {
+            labels: labels,
+            datasets: [
+                {
+                    data: overallInquiryMode['count'],
+                    backgroundColor: colors,
+                    hoverBackgroundColor: hoverColors
+                }
+            ]
+
+        };
+        var overallSoSGCanvas = document.getElementById('overallSoSGCanvas');
+        var overallSourceOfStudentsGraph = new Chart(overallSoSGCanvas, {
+            type: 'pie',
+            data: data
+
+        });
+    </script>
+
+    <!-- Source of Students Line Graph -->
+    <script>
+        var sourceOfStudents = JSON.parse('{{ overallInquiryModeDistributionOverMonth|json_encode|raw }}');
+        var allInquiryModes = JSON.parse('{{ allInquiryModes|json_encode|raw }}');
+        var modeName = [];
+        for (key in allInquiryModes) {
+            modeName.push(key);
+        }
+        var labels = [];
+        var i = 0;
+        var j = -1;
+        for (value in sourceOfStudents['year']) {
+            var key = sourceOfStudents['month'][i] + '-' + sourceOfStudents['year'][i];
+            if (labels.indexOf(key) < 0) {
+                labels.push(key);
+                j++;
+            }
+            allInquiryModes[sourceOfStudents['mode'][i]][j] = sourceOfStudents['count'][i];
+            i++;
+
+        }
+
+        var datasets = [];
+        for (mode in modeName) {
+            var entry = {};
+            entry['label'] = modeName[mode];
+            entry['data'] = allInquiryModes[modeName[mode]];
+            entry['lineTension'] = 0;
+            entry['spanGaps'] = true;
+
+            var r = Math.floor(Math.random() * 200);
+            var g = Math.floor(Math.random() * 200);
+            var b = Math.floor(Math.random() * 200);
+
+            var color = 'rgba(' + r + ', ' + g + ', ' + b + ',0)';
+            var hoverColor = 'rgba(' + r + ', ' + g + ', ' + b + ',.9)';
+
+            entry['backgroundColor'] = color;
+            entry['borderColor'] = hoverColor;
+            datasets.push(entry);
+        }
+
+        var data = {
+            labels: labels,
+            datasets: datasets
+        };
+
+        var SoSCanvas = document.getElementById("SoSCanvas");
+        var sourceOfStudentsGraph = new Chart(SoSCanvas, {
+            type: 'line',
+            data: data,
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+
+        });
+
+    </script>
+
+    <!-- Courses Summary Graph -->
+    <script>
+        /*
+         Weekly
+         */
+        var weeklyCourse = JSON.parse('{{ weeklyInquiryCourseDistribution|json_encode|raw }}');
+        var labels = weeklyCourse['course'];
+        var colors = [];
+        var hoverColors = [];
+        for (label in labels) {
+            var r = Math.floor(Math.random() * 200);
+            var g = Math.floor(Math.random() * 200);
+            var b = Math.floor(Math.random() * 200);
+
+            var color = 'rgba(' + r + ', ' + g + ', ' + b + ',0.7)';
+            var hoverColor = 'rgba(' + r + ', ' + g + ', ' + b + ',.9)';
+            colors.push(color);
+            hoverColors.push(hoverColor);
+        }
+
+        var data = {
+            labels: labels,
+            datasets: [
+                {
+                    data: weeklyCourse['count'],
+                    backgroundColor: colors,
+                    hoverBackgroundColor: hoverColors
+                }
+            ]
+
+        };
+        var weekCSGCanvas = document.getElementById('weekCSGCanvas');
+        var weeklyCourseSummaryGraph = new Chart(weekCSGCanvas, {
+            type: 'pie',
+            data: data
+
+        });
+
+        /*
+         Monthly
+         */
+        var monthlyCourse = JSON.parse('{{ monthlyInquiryCourseDistribution|json_encode|raw }}');
+        labels = monthlyCourse['course'];
+        colors = [];
+        hoverColors = [];
+        for (label in labels) {
+            r = Math.floor(Math.random() * 200);
+            g = Math.floor(Math.random() * 200);
+            b = Math.floor(Math.random() * 200);
+
+            color = 'rgba(' + r + ', ' + g + ', ' + b + ',0.7)';
+            hoverColor = 'rgba(' + r + ', ' + g + ', ' + b + ',.9)';
+            colors.push(color);
+            hoverColors.push(hoverColor);
+        }
+
+        data = {
+            labels: labels,
+            datasets: [
+                {
+                    data: monthlyCourse['count'],
+                    backgroundColor: colors,
+                    hoverBackgroundColor: hoverColors
+                }
+            ]
+
+        };
+        var monthCSGCanvas = document.getElementById('monthCSGCanvas');
+        var monthlyCourseGraph = new Chart(monthCSGCanvas, {
+            type: 'pie',
+            data: data
+
+        });
+
+        /*
+         Annually
+         */
+        var annualyCourse = JSON.parse('{{ annualInquiryCourseDistribution|json_encode|raw }}');
+        labels = annualyCourse['course'];
+        colors = [];
+        hoverColors = [];
+        for (label in labels) {
+            r = Math.floor(Math.random() * 200);
+            g = Math.floor(Math.random() * 200);
+            b = Math.floor(Math.random() * 200);
+
+            color = 'rgba(' + r + ', ' + g + ', ' + b + ',0.7)';
+            hoverColor = 'rgba(' + r + ', ' + g + ', ' + b + ',.9)';
+            colors.push(color);
+            hoverColors.push(hoverColor);
+        }
+
+        data = {
+            labels: labels,
+            datasets: [
+                {
+                    data: annualyCourse['count'],
+                    backgroundColor: colors,
+                    hoverBackgroundColor: hoverColors
+                }
+            ]
+
+        };
+        var yearCSGCanvas = document.getElementById('yearCSGCanvas');
+        var annuallyCourseGraph = new Chart(yearCSGCanvas, {
+            type: 'pie',
+            data: data
+
+        });
+
+        /*
+         Overall
+         */
+        var overallCourse = JSON.parse('{{ overallInquiryCourseDistribution|json_encode|raw }}');
+        labels = overallCourse['course'];
+        colors = [];
+        hoverColors = [];
+        for (label in labels) {
+            r = Math.floor(Math.random() * 200);
+            g = Math.floor(Math.random() * 200);
+            b = Math.floor(Math.random() * 200);
+
+            color = 'rgba(' + r + ', ' + g + ', ' + b + ',0.7)';
+            hoverColor = 'rgba(' + r + ', ' + g + ', ' + b + ',.9)';
+            colors.push(color);
+            hoverColors.push(hoverColor);
+        }
+        data = {
+            labels: labels,
+            datasets: [
+                {
+                    data: overallCourse['count'],
+                    backgroundColor: colors,
+                    hoverBackgroundColor: hoverColors
+                }
+            ]
+
+        };
+        var overallCSGCanvas = document.getElementById('overallCSGCanvas');
+        var overallCourseGraph = new Chart(overallCSGCanvas, {
+            type: 'pie',
+            data: data
+
+        });
+    </script>
+
+    <!-- Courses Summary Line Graph -->
+    <script>
+        var courseDistribution = JSON.parse('{{ overallInquiryCourseDistributionOverMonth|json_encode|raw }}');
+        var allCourses = JSON.parse('{{ allCourses|json_encode|raw }}');
+        var courseName = [];
+        for (key in allCourses) {
+            courseName.push(key);
+        }
+        var labels = [];
+        var i = 0;
+        var j = -1;
+        for (value in courseDistribution['year']) {
+            var key = courseDistribution['month'][i] + '-' + courseDistribution['year'][i];
+            if (labels.indexOf(key) < 0) {
+                labels.push(key);
+                j++;
+            }
+            allCourses[courseDistribution['course'][i]][j] = courseDistribution['count'][i];
+            i++;
+
+        }
+
+        var datasets = [];
+        for (course in courseName) {
+            var entry = {};
+            entry['label'] = courseName[course];
+            entry['data'] = allCourses[courseName[course]];
+            entry['lineTension'] = 0;
+            entry['spanGaps'] = true;
+
+            var r = Math.floor(Math.random() * 200);
+            var g = Math.floor(Math.random() * 200);
+            var b = Math.floor(Math.random() * 200);
+
+            var color = 'rgba(' + r + ', ' + g + ', ' + b + ',0)';
+            var hoverColor = 'rgba(' + r + ', ' + g + ', ' + b + ',.9)';
+
+            entry['backgroundColor'] = color;
+            entry['borderColor'] = hoverColor;
+            datasets.push(entry);
+        }
+
+        var data = {
+            labels: labels,
+            datasets: datasets
+        };
+
+        var COSCanvas = document.getElementById("COSCanvas");
+        var courseDistributionGraph = new Chart(COSCanvas, {
+            type: 'line',
+            data: data,
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+
+        });
+
+    </script>
+{% endblock %}

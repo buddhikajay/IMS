@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Offer</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ offer.id }}</td>
+            </tr>
+            <tr>
+                <th>Timestamp</th>
+                <td>{% if offer.timestamp %}{{ offer.timestamp|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Opened</th>
+                <td>{% if offer.opened %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Accepted</th>
+                <td>{% if offer.accepted %}Yes{% else %}No{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('offer_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('offer_edit', { 'id': offer.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

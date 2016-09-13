@@ -1,0 +1,21 @@
+AppBundle\Entity\InquiryStatus:
+    type: entity
+    table: null
+    repositoryClass: AppBundle\Repository\InquiryStatusRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        code:
+            type: string
+            length: '8'
+            unique: true
+        name:
+            type: string
+            length: '40'
+        complete:
+            type: boolean
+    lifecycleCallbacks: {  }

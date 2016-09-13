@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Broadcast list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Action</th>
+                <th>Description</th>
+                <th>Criteria</th>
+                <th>Timestamp</th>
+                <th>Sentcount</th>
+                <th>Deliveredcount</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for broadcast in broadcasts %}
+            <tr>
+                <td><a href="{{ path('broadcast_show', { 'id': broadcast.id }) }}">{{ broadcast.id }}</a></td>
+                <td>{{ broadcast.action }}</td>
+                <td>{{ broadcast.description }}</td>
+                <td>{{ broadcast.criteria }}</td>
+                <td>{% if broadcast.timestamp %}{{ broadcast.timestamp|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ broadcast.sentCount }}</td>
+                <td>{{ broadcast.deliveredCount }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('broadcast_show', { 'id': broadcast.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('broadcast_edit', { 'id': broadcast.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('broadcast_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}

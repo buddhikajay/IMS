@@ -1,0 +1,980 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <section class="content-header">
+        <h1>Configurations</h1>
+    </section>
+
+    <section class="content">
+        <div class="box-body">
+            <div class="box-body">
+                <ul class="nav nav-tabs">
+
+                    <li class="active"><a data-toggle="tab" href="#al"><i
+                                    class="fa fa-book text-green fa-lg"></i> AL Subjects</a></li>
+                    <li><a data-toggle="tab" href="#is"><i
+                                    class="fa fa-list-ul text-green fa-lg"></i> Inquiry Statuses</a></li>
+                    <li><a data-toggle="tab" href="#im"><i
+                                    class="fa fa-road text-green fa-lg"></i> Inquiry Modes</a></li>
+                    <li><a data-toggle="tab" href="#email"><i
+                                    class="fa fa-envelope text-green fa-lg"></i> Email Templates</a></li>
+                </ul>
+
+                <div class="tab-content">
+
+                    <!-- AL TABL -->
+                    <div id="al" class="tab-pane fade in active">
+                        <div class="box no-border col-md-12 col-lg-12">
+                            <div class="box-header pull-right">
+                                <button type="button" id="new_close" class="btn btn-default" data-toggle="modal"
+                                        data-target="#modal_ALS_new">New
+                                </button>
+                            </div>
+                            <br>
+                            <div class="box-body">
+                                <ul id="courses_list" class="products-list product-list-in-box">
+                                    <br>
+                                    {% for alsubject in alsubjects %}
+                                        <li class="item" id="id_ALS_{{ alsubject.id }}">
+                                            <div class="product-img">
+                                                <i class="fa fa-3x fa-book" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="product-info">
+                                                <div class="product-title">
+                                            <span id="name_ALS_{{ alsubject.id }}"
+                                                  data-name="{{ alsubject.name }}">
+                                                    {{ alsubject.name }}
+                                            </span>
+                                                    <i class="label label-default "
+                                                       id="code_ALS_{{ alsubject.id }}"
+                                                       data-code="{{ alsubject.code }}">
+                                                        {{ alsubject.code }}
+                                                    </i>
+                                                    <span class="pull-right btn-box-tool">
+                                                <a href="#">
+                                                    <i class="fa fa-trash fa-lg" id="delete_button"
+                                                       onclick="delete_ALS_item(this)"
+                                                       aria-hidden="true"
+                                                       data-id="{{ alsubject.id }}"></i>
+                                                </a>
+                                            </span>
+                                                    <div class="pull-right btn-box-tool">
+                                                        <a href="#">
+                                                            <i class="fa fa-pencil fa-lg" data-toggle="modal"
+                                                               data-target="#modal_ALS_edit" aria-hidden="true"
+                                                               data-id="{{ alsubject.id }}"
+                                                               onclick="edit_ALS_item(this)"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% else %}
+                                        <li class="item">
+                                            <div class="product-info">
+                                                <div class="product-title">No AL Subjects Found</div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- IS TAB -->
+                    <div id="is" class="tab-pane fade">
+                        <div class="box no-border col-md-12 col-lg-12">
+                            <div class="box-header pull-right">
+                                <button type="button" id="new_close" class="btn btn-default" data-toggle="modal"
+                                        data-target="#modal_IS_new">New
+                                </button>
+                            </div>
+                            <br>
+                            <div class="box-body">
+                                <ul id="courses_list" class="products-list product-list-in-box">
+                                    <br>
+                                    {% for inquirystatus in ises %}
+                                        <li class="item" id="id_IS_{{ inquirystatus.id }}">
+                                            <div class="product-img">
+                                                <i class="fa fa-3x fa-book" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="product-info">
+                                                <div class="product-title">
+                                                    <span id="name_IS_{{ inquirystatus.id }}"
+                                                          data-name="{{ inquirystatus.name }}">
+                                                            {{ inquirystatus.name }}
+                                                    </span>
+                                                    <i class="label label-default "
+                                                       id="code_IS_{{ inquirystatus.id }}"
+                                                       data-code="{{ inquirystatus.code }}">
+                                                        {{ inquirystatus.code }}
+                                                    </i>
+                                                    {% if (inquirystatus.complete == "") %}
+                                                        <i class="label label-warning "
+                                                           id="complete_IS_{{ inquirystatus.id }}"
+                                                           data-complete="0">
+                                                            Incomplete
+                                                        </i>
+                                                    {% else %}
+                                                        <i class="label label-warning "
+                                                           id="complete_IS_{{ inquirystatus.id }}"
+                                                           data-complete="1">
+                                                            Complete
+                                                        </i>
+                                                    {% endif %}
+                                                    <span class="pull-right btn-box-tool">
+                                                        <a href="#">
+                                                            <i class="fa fa-trash fa-lg" id="delete_button"
+                                                               onclick="delete_IS_item(this)"
+                                                               aria-hidden="true"
+                                                               data-id="{{ inquirystatus.id }}"></i>
+                                                        </a>
+                                                    </span>
+                                                    <div class="pull-right btn-box-tool">
+                                                        <a href="#">
+                                                            <i class="fa fa-pencil fa-lg" data-toggle="modal"
+                                                               data-target="#modal_IS_edit" aria-hidden="true"
+                                                               data-id="{{ inquirystatus.id }}"
+                                                               onclick="edit_IS_item(this)"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% else %}
+                                        <li class="item">
+                                            <div class="product-info">
+                                                <div class="product-title">No Inquiry Statuses Found</div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Inquiry Modes Tab -->
+                    <div id="im" class="tab-pane fade">
+                        <div class="box no-border col-md-12 col-lg-12">
+                            <div class="box-header pull-right">
+                                <button type="button" id="new_close" class="btn btn-default" data-toggle="modal"
+                                        data-target="#modal_IM_new">New
+                                </button>
+                            </div>
+                            <br>
+                            <div class="box-body">
+                                <ul id="courses_list" class="products-list product-list-in-box">
+                                    <br>
+                                    {% for inquiryMode in inquiryModes %}
+                                        <li class="item" id="id_IM_{{ inquiryMode.id }}">
+                                            <div class="product-img">
+                                                <i class="fa fa-3x fa-book" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="product-info">
+                                                <div class="product-title">
+                                                    <span id="name_IM_{{ inquiryMode.id }}"
+                                                          data-name="{{ inquiryMode.name }}">
+                                                            {{ inquiryMode.name }}
+                                                    </span>
+                                                    <i class="label label-default "
+                                                       id="code_IM_{{ inquiryMode.id }}"
+                                                       data-code="{{ inquiryMode.code }}">
+                                                        {{ inquiryMode.code }}
+                                                    </i>
+                                                    <span class="pull-right btn-box-tool">
+                                                        <a href="#">
+                                                            <i class="fa fa-trash fa-lg" id="delete_button"
+                                                               onclick="delete_IM_item(this)"
+                                                               aria-hidden="true"
+                                                               data-id="{{ inquiryMode.id }}"></i>
+                                                        </a>
+                                                    </span>
+                                                    <div class="pull-right btn-box-tool">
+                                                        <a href="#">
+                                                            <i class="fa fa-pencil fa-lg" data-toggle="modal"
+                                                               data-target="#modal_IM_edit" aria-hidden="true"
+                                                               data-id="{{ inquiryMode.id }}"
+                                                               onclick="edit_IM_item(this)"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% else %}
+                                        <li class="item">
+                                            <div class="product-info">
+                                                <div class="product-title">No Inquiry Modes Found</div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Configure Email Tab -->
+                    <div id="email" class="tab-pane fade">
+                        <div class="box no-border col-md-12 col-lg-12">
+                            <div class="box-header pull-right">
+                                <button type="button" id="new_email" class="btn btn-default" data-toggle="modal"
+                                        data-target="#modal_email_new">New
+                                </button>
+                            </div>
+                            <br>
+                            <div class="box-body">
+                                <ul id="email_list" class="products-list product-list-in-box">
+                                    <br>
+                                    {% for email in emails %}
+                                        <li class="item" id="id_email_{{ email.id }}">
+                                            <div class="product-img">
+                                                <i class="fa fa-3x fa-book" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="product-info">
+                                                <div class="product-title">
+                                                    <span id="name_email_{{ email.id }}"
+                                                          data-name="{{ email.name }}">
+                                                            {{ email.name }}
+                                                    </span>
+                                                    <span class="pull-right btn-box-tool">
+                                                        <a href="#">
+                                                            <i class="fa fa-trash fa-lg" id="delete_button"
+                                                               onclick="delete_email_item(this)"
+                                                               aria-hidden="true"
+                                                               data-id="{{ email.id }}"></i>
+                                                        </a>
+                                                    </span>
+                                                    <div class="pull-right btn-box-tool">
+                                                        <a href="#">
+                                                            <i class="fa fa-pencil fa-lg" data-toggle="modal"
+                                                               data-target="#modal_email_edit" aria-hidden="true"
+                                                               data-id="{{ email.id }}"
+                                                               onclick="edit_email_item(this)"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <span id="title_email_{{ email.id }}"
+                                                      data-title="{{ email.title }}">
+                                                            {{ email.title }}
+                                                </span>
+                                                <span class="product-description" id="body_email_{{ email.id }}"
+                                                      data-body="{{ email.body }}">
+                                                    {{ email.body }}
+                                                </span>
+                                            </div>
+                                        </li>
+                                    {% else %}
+                                        <li class="item">
+                                            <div class="product-info">
+                                                <div class="product-title">No Email Templates Found</div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!--  ********** Modals ********** -->
+
+    <!--  ********** IM Edit *********** -->
+    <div class="modal fade" id="modal_IM_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Edit Inquiry Mode</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <input class="form-control" id="edit_IM_code" type="text" placeholder="AL Subject Code">
+                        </div>
+                        <div class="form-group">
+                            <input id="edit_IM_name" class="form-control" type="text" placeholder="AL Subject Name">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="edit_IM_close" class="btn btn-default" data-dismiss="modal">Close
+                    </button>
+                    <button type="button" id="edit_IM_submit" class="btn btn-primary">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--  ********** IM New *********** -->
+    <div class="modal fade" id="modal_IM_new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">New Inquiry Mode</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <input class="form-control" id="new_IM_code" type="text" placeholder="Inquiry Mode Code">
+                        </div>
+                        <div class="form-group">
+                            <input id="new_IM_name" class="form-control" type="text" placeholder="Inquiry Mode Name">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="new_IM_close" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" id="new_IM_submit" class="btn btn-primary">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--  ********** IS New *********** -->
+    <div class="modal fade" id="modal_IS_new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">New Inquiry Status</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <input class="form-control" id="new_IS_code" type="text" placeholder="Inquiry Status Code">
+                        </div>
+                        <div class="form-group">
+                            <input id="new_IS_name" class="form-control" type="text" placeholder="Inquiry Status Name">
+                        </div>
+                        <div class="form-group">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="new_IS_radio" id="new_IS_true" value="1"
+                                           checked="">
+                                    Complete
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="new_IS_radio" id="new_IS_false" value="0">
+                                    Incomplete
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="new_IS_close" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" id="new_IS_submit" class="btn btn-primary">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--  ********** IS Edit *********** -->
+    <div class="modal fade" id="modal_IS_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Edit Inquiry Status</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <input class="form-control" id="edit_IS_code" type="text" placeholder="AL Subject Code">
+                        </div>
+                        <div class="form-group">
+                            <input id="edit_IS_name" class="form-control" type="text" placeholder="AL Subject Name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="edit_IS_radio" id="new_IS_true" value="1"
+                                       checked="">
+                                Complete
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="edit_IS_radio" id="new_IS_false" value="0">
+                                Incomplete
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="edit_IS_close" class="btn btn-default" data-dismiss="modal">Close
+                    </button>
+                    <button type="button" id="edit_IS_submit" class="btn btn-primary">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--  ********** ALS New *********** -->
+    <div class="modal fade" id="modal_ALS_new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">New AL Subject</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <input class="form-control" id="new_ALS_code" type="text" placeholder="AL Subject Code">
+                        </div>
+                        <div class="form-group">
+                            <input id="new_ALS_name" class="form-control" type="text" placeholder="AL Subject Name">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="new_ALS_close" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" id="new_ALS_submit" class="btn btn-primary">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--  ********** ALS Edit *********** -->
+    <div class="modal fade" id="modal_ALS_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Edit AL Subject</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <input class="form-control" id="edit_ALS_code" type="text" placeholder="AL Subject Code">
+                        </div>
+                        <div class="form-group">
+                            <input id="edit_ALS_name" class="form-control" type="text" placeholder="AL Subject Name">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="edit_ALS_close" class="btn btn-default" data-dismiss="modal">Close
+                    </button>
+                    <button type="button" id="edit_ALS_submit" class="btn btn-primary">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--  ********** Email New *********** -->
+    <div class="modal fade" id="modal_email_new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">New Email Template</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <form action="#" method="post">
+                            <div class="form-group">
+                                <label>Email Template Name</label>
+                                <input type="text" class="form-control" id="new_email_name"
+                                       placeholder="name">
+                            </div>
+                            <div class="form-group">
+                                <label>Email Subject</label>
+                                <input type="text" class="form-control" id="new_email_subject" name="title"
+                                       placeholder="Subject">
+                            </div>
+                            <div>
+                                <label>Email Body</label>
+                                <textarea class="form-control" rows="5" id="new_email_body"
+                                          placeholder="Email message body"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="new_email_close" class="btn btn-default" data-dismiss="modal">Close
+                    </button>
+                    <button type="button" id="new_email_submit" class="btn btn-primary">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--  ********** Email Edit *********** -->
+    <div class="modal fade" id="modal_email_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Edit Email Template</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <form action="#" method="post">
+                            <div class="form-group">
+                                <label>Email Template Name</label>
+                                <input type="text" class="form-control" id="edit_email_name"
+                                       placeholder="name">
+                            </div>
+                            <div class="form-group">
+                                <label>Title</label>
+                                <input type="text" id="edit_email_subject" class="form-control" name="subject"
+                                       placeholder="Subject">
+                            </div>
+                            <div>
+                                <label>Body</label>
+                                <textarea class="form-control" id="edit_email_body" rows="5"
+                                          placeholder="Email message body"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="edit_email_close" class="btn btn-default" data-dismiss="modal">Close
+                    </button>
+                    <button type="button" id="edit_email_submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% javascripts  '@AppBundle/Resources/public/js/jquery-2.2.3.min.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <!-- Edit IM Script-->
+    <script>
+        function edit_IM_item(item) {
+            var id = $(item).attr('data-id');
+            console.log('editing item : ' + id);
+
+            var code = $('#code_IM_' + id).attr('data-code');
+            var name = $('#name_IM_' + id).attr('data-name');
+            var complete = $('#complete_IM_' + id).attr('data-complete');
+
+            console.log(code + "," + name + "," + complete);
+
+            $('#edit_IM_code').val(code);
+            $('#edit_IM_name').val(name);
+            $('#edit_IM_submit').attr("data-id", id);
+        }
+
+        $('#edit_IM_submit').click(function () {
+            var code = $('#edit_IM_code').val();
+            var name = $('#edit_IM_name').val();
+            var id = $('#edit_IM_submit').attr('data-id');
+
+            var data = {id: id, code: code, name: name, Dtype: "im"};
+            console.log(data);
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('configure_update') }}',
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + ", debug " + response['debug']);
+                    update_html(data);
+                    $('#edit_IM_close').click();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        })
+
+        function update_html(data) {
+            // @todo fill here.
+            // $('#name_ALS_' + data['id']).html(data['name']).attr("data-name", data['name']);
+            // $('#code_ALS_' + data['id']).html(data['code']).attr('data-code', data['code']);
+        }
+    </script>
+
+    <!-- New IM Ajax -->
+    <script>
+        $('#new_IM_submit').click(function () {
+            var code = $('#new_IM_code').val();
+            var name = $('#new_IM_name').val();
+
+            var data = {code: code, name: name, Dtype: "im"};
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('configure_new') }}',
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + " debug :" + response['debug']);
+                    inject_html(data);
+                    $('#new_IM_close').click();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        });
+
+        function inject_html(data) {
+            //@todo inject new html element
+        }
+    </script>
+
+    <!-- Delete IM Ajax -->
+    <script>
+        function delete_IM_item(item) {
+            var id = $(item).attr('data-id');
+            console.log('deleting : ' + id);
+            var data = {id: id, Dtype: "im"};
+            $.ajax({
+                type: 'DELETE',
+                url: '{{ path('configure_delete') }}',
+                data: data,
+                dataType: 'json',
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + ' , debug : ' + response['debug']);
+                    $('#id_IM_' + id).fadeOut(500, function () {
+                        //any ost animation after fading
+                    });
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        }
+    </script>
+
+    <!-- Edit IS Script-->
+    <script>
+        function edit_IS_item(item) {
+            var id = $(item).attr('data-id');
+            console.log('editing item : ' + id);
+
+            var code = $('#code_IS_' + id).attr('data-code');
+            var name = $('#name_IS_' + id).attr('data-name');
+            var complete = $('#complete_IS_' + id).attr('data-complete');
+
+            console.log(code + "," + name + "," + complete);
+
+            $('#edit_IS_code').val(code);
+            $('#edit_IS_name').val(name);
+
+
+            var $radios = $('input:radio[name=edit_IS_radio]');
+            if (complete == "" || complete == "0") {
+                $radios.filter('[value=0]').prop('checked', true);
+            } else {
+                $radios.filter('[value=1]').prop('checked', true);
+            }
+            $('#edit_IS_submit').attr("data-id", id);
+        }
+
+        $('#edit_IS_submit').click(function () {
+            var code = $('#edit_IS_code').val();
+            var name = $('#edit_IS_name').val();
+            var complete = $('input[name=edit_IS_radio]:checked').val();
+            var id = $('#edit_IS_submit').attr('data-id');
+
+            var data = {id: id, code: code, name: name, complete: complete, Dtype: "is"};
+            console.log(data);
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('configure_update') }}',
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + ", debug " + response['debug']);
+                    update_html(data);
+                    $('#edit_IS_close').click();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        })
+
+        function update_html(data) {
+            //$('#name_ALS_' + data['id']).html(data['name']).attr("data-name", data['name']);
+            //$('#code_ALS_' + data['id']).html(data['code']).attr('data-code', data['code']);
+        }
+    </script>
+
+    <!-- New IS Ajax -->
+    <script>
+        $('#new_IS_submit').click(function () {
+            var code = $('#new_IS_code').val();
+            var name = $('#new_IS_name').val();
+            var complete = $('input[name=new_IS_radio]:checked').val();
+
+            var data = {code: code, name: name, complete: complete, Dtype: "is"};
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('configure_new') }}',
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + " debug :" + response['debug']);
+                    inject_html(data);
+                    $('#new_IS_close').click();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        });
+
+        function inject_html(data) {
+            //@todo inject new html element
+        }
+    </script>
+
+    <!-- Delete IS Ajax -->
+    <script>
+        function delete_IS_item(item) {
+            var id = $(item).attr('data-id');
+            console.log('deleting : ' + id);
+            var data = {id: id, Dtype: "is"};
+            $.ajax({
+                type: 'DELETE',
+                url: '{{ path('configure_delete') }}',
+                data: data,
+                dataType: 'json',
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + ' , debug : ' + response['debug']);
+                    $('#id_IS_' + id).fadeOut(500, function () {
+                        //any ost animation after fading
+                    });
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        }
+    </script>
+
+    <!-- Edit ALS Script-->
+    <script>
+        function edit_ALS_item(item) {
+            var id = $(item).attr('data-id');
+            console.log('editing item : ' + id);
+
+            var code = $('#code_ALS_' + id).attr('data-code');
+            var name = $('#name_ALS_' + id).attr('data-name');
+
+            console.log(code + "," + name);
+
+            $('#edit_ALS_code').val(code);
+            $('#edit_ALS_name').val(name);
+            $('#edit_ALS_submit').attr("data-id", id);
+        }
+
+        $('#edit_ALS_submit').click(function () {
+            var code = $('#edit_ALS_code').val();
+            var name = $('#edit_ALS_name').val();
+            var id = $('#edit_ALS_submit').attr('data-id');
+
+            var data = {id: id, code: code, name: name, Dtype: "alsub"};
+            console.log(data);
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('configure_update') }}',
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + ", debug " + response['debug']);
+                    update_html(data);
+                    $('#edit_ALS_close').click();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        })
+
+        function update_html(data) {
+            $('#name_ALS_' + data['id']).html(data['name']).attr("data-name", data['name']);
+            $('#code_ALS_' + data['id']).html(data['code']).attr('data-code', data['code']);
+        }
+    </script>
+
+    <!-- New ALS Ajax -->
+    <script>
+        $('#new_ALS_submit').click(function () {
+            var code = $('#new_ALS_code').val();
+            var name = $('#new_ALS_name').val();
+
+            var data = {code: code, name: name, Dtype: "alsub"};
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('configure_new') }}',
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + " debug :" + response['debug']);
+                    inject_html(data);
+                    $('#new_ALS_close').click();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        });
+
+        function inject_html(data) {
+            //@todo inject new html element
+        }
+    </script>
+
+    <!-- Delete ALS Ajax -->
+    <script>
+        function delete_ALS_item(item) {
+            var id = $(item).attr('data-id');
+            console.log('deleting : ' + id);
+            var data = {id: id, Dtype: "alsub"};
+            $.ajax({
+                type: 'DELETE',
+                url: '{{ path('configure_delete') }}',
+                data: data,
+                dataType: 'json',
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + ' , debug : ' + response['debug']);
+                    $('#id_ALS_' + id).fadeOut(500, function () {
+                        //any ost animation after fading
+                    });
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        }
+
+    </script>
+
+    <!-- New Email Script-->
+    <script>
+        $('#new_email_submit').click(function () {
+            var name = $('#new_email_name').val();
+            var body = $('#new_email_body').val();
+            var subject = $('#new_email_subject').val();
+
+            var data = {name: name, body: body, title: subject};
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('configure_new_email') }}',
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + " debug :" + response['debug']);
+                    inject_email_html(data);
+                    $('#new_email_close').click();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        });
+
+        function inject_email_html(data) {
+            //@todo inject new html element
+        }
+    </script>
+
+    <!-- Update Email Script-->
+    <script>
+        function edit_email_item(item) {
+            var id = $(item).attr('data-id');
+            console.log('editing item : ' + id);
+
+            var title = $('#title_email_' + id).attr('data-title');
+            var body = $('#body_email_' + id).attr('data-body');
+            var name = $('#name_email_' + id).attr('data-name');
+
+            $('#edit_email_subject').val(title);
+            $('#edit_email_body').val(body);
+            $('#edit_email_name').val(name);
+            $('#edit_email_submit').attr("data-id", id);
+        }
+
+        $('#edit_email_submit').click(function () {
+            var title = $('#edit_email_subject').val();
+            var body = $('#edit_email_body').val();
+            var name = $('#edit_email_name').val();
+            var id = $('#edit_email_submit').attr('data-id');
+
+            var data = {id: id, title: title, body: body, name: name};
+            console.log(data);
+
+            $.ajax({
+                type: "POST",
+                url: '{{ path('configure_update_email') }}',
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + ", debug " + response['debug']);
+                    update_html(data);
+                    $('#edit_email_close').click();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        })
+
+        function update_html(data) {
+            $('#title_email_' + data['id']).html(data['title']).attr("data-title", data['title']);
+            $('#body_email_' + data['id']).html(data['body']).attr('data-body', data['body']);
+        }
+    </script>
+
+    <!-- Delete Email Script-->
+    <script>
+        function delete_email_item(item) {
+            var id = $(item).attr('data-id');
+            console.log('deleting : ' + id);
+            var data = {id: id};
+            $.ajax({
+                type: 'DELETE',
+                url: '{{ path('configure_delete_email') }}',
+                data: data,
+                dataType: 'json',
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + ' , debug : ' + response['debug']);
+                    $('#id_email_' + id).fadeOut(500, function () {
+                        //any ost animation after fading
+                    });
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        }
+    </script>
+
+{% endblock %}

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    {% block stylesheets %}{% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+
+    {% stylesheets
+    '@AppBundle/Resources/public/css/bootstrap.css'
+    '@AppBundle/Resources/public/css/AdminLTE.css'
+    '@AppBundle/Resources/public/css/skins/skin-blue.min.css'
+    filter='cssrewrite' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+
+<div class="wrapper">
+
+    <!-- Main Header -->
+    <header class="main-header">
+
+        <!-- Logo -->
+        <a href="{{ path('marketing_dashboard') }}" class="logo">
+            <!-- mini logo for sidebar mini 50x50 pixels -->
+            <span class="logo-mini"><b>P</b>FT</span>
+            <!-- logo for regular state and mobile devices -->
+            <span class="logo-lg"><b>Pad</b>Foot</span>
+        </a>
+
+        <!-- Header Navbar -->
+        <nav class="navbar navbar-static-top" role="navigation">
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span class="sr-only">Toggle navigation</span>
+            </a>
+            <!-- Navbar Right Menu -->
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+
+                    <!-- Notifications Menu -->
+                    <li class="dropdown notifications-menu">
+                        <!-- Menu toggle button -->
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-bell-o"></i>
+                            <span class="label label-warning" id="pendingNumber"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <!-- Inner Menu: contains the notifications -->
+                                <ul class="menu">
+                                    <li><!-- start notification -->
+                                        <a href="{{ path('inquiries_view') }}">
+                                            <i class="fa fa-list text-aqua"></i><span id="pendingNumberText">Pending Inquiries</span>
+                                        </a>
+                                    </li>
+                                    <!-- end notification -->
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Tasks Menu -->
+                    <li class="dropdown tasks-menu">
+                        <!-- Menu Toggle Button -->
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-flag-o"></i>
+                            <span class="label label-danger" id="followingNumber"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <!-- Inner menu: contains the tasks -->
+                                <ul class="menu">
+                                    <li><!-- start notification -->
+                                        <a href="{{ path('inquiries_view') }}">
+                                            <i class="fa fa-users text-aqua"></i><span id="followingNumberText">Following Inquiries</span>
+                                        </a>
+                                    </li>
+                                    <!-- end notification -->
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- User Account Menu -->
+                    <li class="dropdown user user-menu">
+                        <!-- Menu Toggle Button -->
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <!-- The user image in the navbar-->
+                            <img src="{{ asset('uploads/pic/default.jpg') }}"
+                                 class="user-image" alt="User Image" id="userImage1">
+                            <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                            <span class="hidden-xs">{{ app.user.username }}</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- The user image in the menu -->
+                            <li class="user-header">
+                                <img src="{{ asset('uploads/pic/default.jpg') }}"
+                                     class="img-circle" alt="User Image" id="userImage3">
+
+                                <p>
+                                    {{ app.user.username }}
+                                    <small>{% for role in app.user.roles %}
+                                            {{ role }}{% if false == loop.last %}, {% endif %}
+                                        {% endfor %}</small>
+                                    <small>Last log in: {{ app.user.lastLogin|date('Y-m-d H:i:s') }}</small>
+                                </p>
+                            </li>
+                            <!-- Menu Footer-->
+                            <li class="user-footer">
+                                <div class="pull-left">
+                                    <a href="{{ path('user_profile') }}" class="btn btn-default btn-flat">Profile</a>
+                                </div>
+                                <div class="pull-right">
+                                    <a href='{{ path('fos_user_security_logout') }}' class="btn btn-default btn-flat">Sign
+                                        out</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <!-- Left side column. contains the logo and sidebar -->
+    <aside class="main-sidebar">
+
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+
+            <!-- Sidebar user panel (optional) -->
+            <div class="user-panel">
+                <div class="pull-left image"> <!-- FETCH: User image -->
+                    <img src="{{ asset('uploads/pic/default.jpg') }}"
+                         class="img-circle" id="userImage2" alt="User Image">
+                </div>
+                <div class="pull-left info">
+                    <p>{{ app.user.username }}</p><!-- FETCH: User name -->
+                    <!-- Status -->
+                    <a href="{{ path('user_profile') }}"><i class="fa fa-circle text-success"></i> Online</a>
+                </div>
+            </div>
+
+
+            <!-- Sidebar Menu -->
+            <ul class="sidebar-menu">
+                {% if is_granted('ROLE_COUNSELOR') %}
+                    <li class="header">Counsellor</li>
+                {% endif %}
+                {% if is_granted('ROLE_DIRECTOR') %}
+                    <li class="header">Director</li>
+                {% endif %}
+                {% if is_granted('ROLE_MANAGER') %}
+                    <li class="header">Manger</li>
+                {% endif %}
+                {% if is_granted('ROLE_SAR') %}
+                    <li class="header">Registrar</li>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="header">Administrator</li>
+                {% endif %}
+
+                {% if is_granted('ROLE_COUNSELOR') %}
+                    <li>
+                        <a href="{{ path('marketing_dashboard') }}"><i class="fa fa-dashboard"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+
+                    <li><a href={{ path('inquiries_view') }}><i class="fa fa-book"></i> <span>Inquiries</span></a></li>
+                {% endif %}
+                {% if is_granted('ROLE_MANAGER') %}
+                    <li>
+                        <a href={{ path('bulkupload_view') }}><i class="fa fa-folder-open"></i> <span>Bulk Input</span></a>
+                    </li>
+                    <li>
+                        <a href={{ path('shoutout_view') }}><i class="fa fa-bullhorn"></i> <span>ShoutOut</span></a>
+                    </li>
+                    <li><a href={{ path('targets_view') }}><i class="fa fa-calendar"></i> <span>Targets</span></a></li>
+                {% endif %}
+                {% if is_granted('ROLE_DIRECTOR') %}
+                    <li><a href={{ path('reports_view') }}><i class="fa fa-bar-chart"></i> <span>Reports</span></a></li>
+                {% endif %}
+                {% if is_granted('ROLE_SAR') %}
+                    <li>
+                        <a href={{ path('admissions_view') }}><i class="fa fa-group"></i> <span>Admissions</span></a>
+                    </li>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-gear"></i> <span>Settings</span>
+                            <span class="pull-right-container">
+                              <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu" style="display: none;">
+                            <li><a href={{ path('configure_view') }}><i class="fa fa-wrench"></i>Configure</a></li>
+                            <li><a href={{ path('usermanagement_view') }}><i class="fa fa-users"></i>User Management</a>
+                            </li>
+                            <li><a href={{ path('inquirymanagement_view') }}><i class="fa fa-filter"></i>Inquiry
+                                    Management</a>
+                            </li>
+                            <li><a href={{ path('courses_view') }}><i class="fa fa-graduation-cap"></i>Course Management</a>
+                            </li>
+                        </ul>
+                    </li>
+                {% endif %}
+
+
+            </ul>
+            <!-- /.sidebar-menu -->
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <!--section class="content-header">
+            <h1>
+                Page Header
+                <small>Optional description</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+                <li class="active">Here</li>
+            </ol>
+        </section -->
+
+        <!-- Main content -->
+        <section class="content">
+
+            {% block body %}
+            {% endblock %}
+
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Main Footer -->
+    <footer class="main-footer">
+        <!-- To the right -->
+        <div class="pull-right hidden-xs">
+            PadFoot
+        </div>
+        <!-- Default to the left -->
+        <strong>Copyright &copy; 2016 <a href="#">PreviewVR</a>.</strong> All rights reserved.
+    </footer>
+
+    <!-- Control Sidebar -->
+    <!-- /.control-sidebar -->
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div>
+
+
+<!-- ********** Modals ********** -->
+
+<!-- Modal : Create Course-->
+<div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Log In</h4>
+            </div>
+            <div class="modal-body">
+                <div class="box-body">
+                    <div class="form-group">
+                        <input id="login_username" class="form-control" type="text" placeholder="User Name">
+                    </div>
+                    <div class="form-group">
+                        <input id="login_password" class="form-control" type="password" placeholder="password">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="login_close" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" id="login_submit" class="btn btn-primary">Log In</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% block javascripts %}
+
+    {% javascripts  '@AppBundle/Resources/public/js/jquery-2.2.3.min.js'
+    '@AppBundle/Resources/public/js/bootstrap.js'
+    '@AppBundle/Resources/public/js/app.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+{% endblock %}
+
+<!-- On load -->
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: '{{ path('base_data') }}',
+            dataType: "json",
+            success: function (response) {
+                document.getElementById('pendingNumber').innerHTML = response['pending'];
+                document.getElementById('pendingNumberText').innerHTML = "You have " + response['pending'] + " pending inquiries";
+                document.getElementById('followingNumber').innerHTML = response['following'];
+                document.getElementById('followingNumberText').innerHTML = "You have " + response['following'] + " current inquiries";
+
+                var profilePic = '../uploads/pic/';
+                if (response['profilePic'].length > 2) {
+                    profilePic = profilePic + response['profilePic'];
+                } else {
+                    profilePic = profilePic + 'default.jpg';
+                }
+
+                document.getElementById('userImage1').src = profilePic;
+                document.getElementById('userImage2').src = profilePic;
+                document.getElementById('userImage3').src = profilePic;
+
+            },
+            error: function () {
+                console.log("Oops.!! Something has went wrong :( ");
+            }
+        });
+    });
+</script>
+
+<!-- Create New Ajax -->
+<script>
+    $('#login_submit').click(function () {
+        var username = $('#login_username').val();
+        var password = $('#login_password').val();
+
+        var data = {_username: username, _password: password};
+
+        $.ajax({
+            type: "POST",
+            url: '{{ path('fos_user_security_login') }}',
+            data: data,
+            dataType: "json",
+            success: function (response) {
+                console.log(response['code'] + " : " + response['message'] + " debug :" + response['debug']);
+                inject_html(data);
+                $('#new_close').click();
+            },
+            error: function () {
+                console.log("Oops.!! Something has went wrong :( ");
+            }
+        });
+    });
+
+    function inject_html(data) {
+        //@todo inject new html element
+    }
+</script>
+
+
+</body>
+</html>

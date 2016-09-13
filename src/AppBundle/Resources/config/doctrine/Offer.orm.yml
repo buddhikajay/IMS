@@ -1,0 +1,26 @@
+AppBundle\Entity\Offer:
+    type: entity
+    table: null
+    repositoryClass: AppBundle\Repository\OfferRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        timestamp:
+            type: datetime
+        opened:
+            type: boolean
+            nullable: true
+        accepted:
+            type: boolean
+            nullable: true
+    oneToOne:
+        inquiry:
+            targetEntity: Inquiry
+            joinColumn:
+                name: inquiry
+                referencedColumnName: id
+    lifecycleCallbacks: {  }

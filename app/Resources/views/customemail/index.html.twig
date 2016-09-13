@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>CustomEmail list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Body</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for customEmail in customEmails %}
+            <tr>
+                <td><a href="{{ path('customemail_show', { 'id': customEmail.id }) }}">{{ customEmail.id }}</a></td>
+                <td>{{ customEmail.title }}</td>
+                <td>{{ customEmail.body }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('customemail_show', { 'id': customEmail.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('customemail_edit', { 'id': customEmail.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('customemail_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}

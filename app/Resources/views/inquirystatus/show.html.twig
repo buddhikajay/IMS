@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>InquiryStatus</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ inquiryStatus.id }}</td>
+            </tr>
+            <tr>
+                <th>Code</th>
+                <td>{{ inquiryStatus.code }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ inquiryStatus.name }}</td>
+            </tr>
+            <tr>
+                <th>Complete</th>
+                <td>{% if inquiryStatus.complete %}Yes{% else %}No{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('inquirystatus_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('inquirystatus_edit', { 'id': inquiryStatus.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

@@ -1,0 +1,24 @@
+AppBundle\Entity\Course:
+    type: entity
+    table: null
+    repositoryClass: AppBundle\Repository\CourseRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        code:
+            type: string
+            length: '10'
+            unique: true
+        name:
+            type: string
+            length: 255
+        description:
+            type: text
+            nullable: true
+        scoreRequired:
+            type: integer
+    lifecycleCallbacks: {  }

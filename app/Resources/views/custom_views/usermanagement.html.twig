@@ -1,0 +1,322 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <section class="content-header">
+        <h1>User Management<span class="pull-right"><button class="btn btn-default" data-toggle="modal"
+                                                            data-target="#create_user">+ Add New</button> </span></h1>
+    </section>
+
+    <section class="content">
+        <ul class="products-list product-list-in-box">
+            {% for profile in userProfiles %}
+                <li class="item" id="user_{{ profile.userID }}">
+                    <div class="product-img">
+                        <img src="{{ profile.profilePic|length >2 ? '../uploads/pic/'~ profile.profilePic : '../uploads/pic/default.jpg' }}"
+                             alt="Product Image">
+                    </div>
+                    <div class="product-info">
+                        <a href="#" class="product-title">{{ profile.firstName }} {{ profile.lastName }}</a>
+                        <span class="pull-right btn-box-tool">
+                                <a href="#">
+                                    <i class="fa fa-trash fa-lg" id="delete_button" data-target="#delete"
+                                       data-toggle="modal"
+                                       aria-hidden="true" data-id="{{ profile.userID }}"
+                                       onclick="delete_item(this)"></i>
+                                </a>
+                            </span>
+                        <span class="pull-right btn-box-tool">
+                        <a href="#">
+                            <i class="fa fa-pencil fa-lg" data-toggle="modal"
+                               data-target="#edit" aria-hidden="true" data-id="{{ profile.id }}"
+                               onclick="edit_item(this)"></i>
+                        </a>
+                    </span>
+                        {% for role in profile.roles %}
+                            {% if role=='ROLE_ADMIN' %}
+                                <span id="role_{{ profile.id }}" data-level="5" class="product-description">
+                                    Administrator
+                                </span>
+                            {% elseif role=='ROLE_DIRECTOR' %}
+                                <span id="role_{{ profile.id }}" data-level="2" class="product-description">
+                                    Director
+                                </span>
+
+                            {% elseif role=='ROLE_MANAGER' %}
+                                <span id="role_{{ profile.id }}" data-level="3" class="product-description">
+                                    Manager
+                                </span>
+
+                            {% elseif role=='ROLE_SAR' %}<span id="role_{{ profile.id }}" data-level="4"
+                                                               class="product-description">
+                                    Registrar
+                                </span>
+
+                            {% else %}
+                                <span id="role_{{ profile.id }}" data-level="1" class="product-description">
+                                    Counselor
+                                </span>
+
+                            {% endif %}
+                            <span id data-level class="product-description">
+
+                            </span>
+                        {% endfor %}
+                    </div>
+
+                </li>
+            {% else %}
+                <li class="item">
+                    <div class="product-img">
+                        <img src="../{{ asset('uploads/pic/default.jpg') }}" alt="Product Image">
+                    </div>
+                    <div class="product-info">
+                        <a class="product-title">No User Profile Found.</a>
+
+                    </div>
+                </li>
+            {% endfor %}
+            <!-- /.item -->
+
+        </ul>
+    </section>
+
+
+    <!-- Modal Boxes -->
+
+    <!-- Edit User -->
+    <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="editUserModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Edit User Level</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label>User Level</label>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="userLevel" id="radio1" value="1">
+                                    Counselor
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="userLevel" id="radio2" value="2">
+                                    Director
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="userLevel" id="radio4" value="4">
+                                    Registrar
+                                </label>
+                            </div>
+
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="userLevel" id="radio3" value="3">
+                                    Manager
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="userLevel" id="radio5" value="5">
+                                    Administrator
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="edit_close" class="btn btn-default" data-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" id="edit_submit" class="btn btn-primary" onclick="saveUserLevel()">Save
+                        Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="create_user" tabindex="-1" role="dialog" aria-labelledby="createUserModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Create New User</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="new_user_email">Email Address</label>
+                            <input class="form-control" id="new_user_email" type="text" aria-label="Email Address">
+                        </div>
+                        <div class="form-group">
+                            <label for="new_user_username">Username</label>
+                            <input class="form-control" id="new_user_username" type="text">
+                        </div>
+                        <div class="form-group">
+                            <label for="new_user_password">Password</label>
+                            <input class="form-control" id="new_user_password" type="password">
+                        </div>
+                        <div class="form-group">
+                            <label for="new_user_confirm_password">Confirm Password</label>
+                            <input class="form-control" id="new_user_confirm_password" type="password">
+                        </div>
+                        <div class="form-group">
+                            <label for="new_user_level">User Level</label>
+                            <select class="form-control" id="new_user_level">
+                                <option value="1">Counselor</option>
+                                <option value="2">Director</option>
+                                <option value="4">Registrar</option>
+                                <option value="3">Manager</option>
+                                <option value="5">Administrator</option>
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="create_close" class="btn btn-default" data-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" id="create_submit" class="btn btn-primary">Create User</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal : Confirm Delete -->
+    <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="deleteUserModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Delete User</h4>
+                </div>
+                <div class="modal-body">
+                    <span>Do you really want to remove the user?</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="delete_close" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" id="delete_submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% javascripts  '@AppBundle/Resources/public/js/jquery-2.2.3.min.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <!-- Edit Script-->
+    <script>
+        function edit_item(item) {
+            var id = $(item).attr('data-id');
+            console.log(id);
+
+            var level = $('#role_' + id).attr('data-level');
+            $('#radio' + level).attr('checked', true);
+            $('#edit_submit').attr('data-id', id);
+        }
+
+        $('#edit_submit').click(function () {
+            var selectedVal = "";
+            var id = $('#edit_submit').attr('data-id');
+            var selected = $("input[type='radio'][name='userLevel']:checked");
+            if (selected.length > 0) {
+                selectedVal = selected.val();
+            }
+            console.log(selectedVal);
+            var data = {id: id, level: selectedVal};
+            $.ajax({
+                type: 'POST',
+                url: '{{ path('update_user_level') }}',
+                data: data,
+                dataType: 'JSON',
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + " debug :" + response['debug']);
+                    inject_html(data);
+                    $('#edit_close').click();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+
+        });
+        function saveUserLevel() {
+
+        }
+
+        function inject_html(data) {
+            location.reload();
+        }
+    </script>
+
+    <!-- New User Script -->
+    <script>
+        $('#create_submit').click(function () {
+            var username = $('#new_user_username').val();
+            var email = $('#new_user_email').val();
+            var password = $('#new_user_password').val();
+            var confirm = $('#new_user_confirm_password').val();
+            var userlevel = $('#new_user_level').val();
+            var data = {username: username, email: email, password: password, level: userlevel};
+
+            console.log(data);
+            $.ajax({
+                type: 'POST',
+                url: '{{ path('new_user') }}',
+                data: data,
+                dataType: 'JSON',
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + " debug :" + response['debug']);
+                    inject_html(data);
+                    $('#create_close').click();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        });
+    </script>
+
+    <!-- Delete Script -->
+    <script>
+        function delete_item(item) {
+            var id = $(item).attr('data-id');
+            $('#delete_submit').attr('data-id', id);
+            console.log('deleting : ' + id);
+
+        }
+
+        $('#delete_submit').click(function () {
+            var id = $('#delete_submit').attr('data-id');
+            var data = {id: id};
+            $.ajax({
+                type: 'DELETE',
+                url: '{{ path('delete_user') }}',
+                data: data,
+                dataType: 'JSON',
+                success: function (response) {
+                    console.log(response['code'] + " : " + response['message'] + ' , debug : ' + response['debug']);
+                    $('#user_' + id).fadeOut(500, function () {
+                        //any ost animation after fading
+                    });
+                    $('#delete_close').click();
+                },
+                error: function () {
+                    console.log("Oops.!! Something has went wrong :( ");
+                }
+            });
+        });
+    </script>
+{% endblock %}
